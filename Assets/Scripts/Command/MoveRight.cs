@@ -15,6 +15,26 @@ namespace DesignPattern.Commands
         {
             player.transform.Translate(player.transform.right * player.Speed * Time.deltaTime * 0.7f);
         }
+
+        public override void SetFacing()
+        {
+            switch (player.Facing)
+            {
+                case Direction.DOWN:
+                    Debug.Log("RIGHT");
+                    break;
+                case Direction.LEFT:
+                    Debug.Log("RIGHT");
+                    break;
+                case Direction.UP:
+                    Debug.Log("RIGHT");
+                    break;
+                case Direction.RIGHT:
+                    Debug.Log("Giu Nguyen");
+                    break;
+
+            }
+        }
     }
 
 }

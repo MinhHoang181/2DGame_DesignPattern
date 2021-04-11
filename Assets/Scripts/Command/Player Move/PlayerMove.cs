@@ -15,8 +15,11 @@ namespace DesignPattern.Commands
         public override void Execute()
         {
             Move();
+            SetFacing();
         }
 
         public abstract void Move();
+
+        public abstract void SetFacing();
     }
 }
