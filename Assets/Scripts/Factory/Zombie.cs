@@ -7,11 +7,27 @@ namespace DesignPattern.Factory
     public class Zombie : MonoBehaviour, Character
     {
         public int Health { get { return health; } set { health = value; } }
+        public int CurrentHealth
+        {
+            get { return currentHealth; }
+            set
+            {
+                currentHealth = Mathf.Max(0, value);
+                if (currentHealth.Equals(0))
+                {
+                    // Chet
+                }
+            }
+        }
         public float Speed { get { return speed; } set { speed = value; } }
 
         [Header("Stats")]
         [SerializeField] protected int health;
+        private int currentHealth;
         [SerializeField] protected float speed;
+        [SerializeField] int damage;
+        [SerializeField] float timeToAttack;
+        private bool isAttack = false;
 
         protected Player player;
 
@@ -36,9 +52,9 @@ namespace DesignPattern.Factory
             {
                 Move();
             }
-            else
+            else if (!isAttack)
             {
-                Attack();
+                StartCoroutine(StartAttack());
             }
         }
 
@@ -57,15 +73,28 @@ namespace DesignPattern.Factory
             transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0));
         }
 
+        private IEnumerator StartAttack()
+        {
+            isAttack = true;
+            yield return new WaitForSeconds(timeToAttack);
+            Attack();
+            isAttack = false;
+        }
+
         public void Attack()
         {
             //Debug.Log(transform.name + " attack player");
-            player.OnDamaged(1);
+            player.TakeDamage(damage);
         }
 
-        public void OnDamaged(int damage)
+        public void TakeDamage(int damage)
         {
-            
+            CurrentHealth -= damage;
+        }
+
+        public void Die()
+        {
+            Destroy(gameObject);
         }
     }
 }
