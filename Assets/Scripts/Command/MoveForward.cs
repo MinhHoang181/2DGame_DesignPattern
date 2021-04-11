@@ -19,22 +19,9 @@ namespace DesignPattern.Commands
 
         public override void SetFacing()
         {
-            switch (player.Facing)
-            {
-                case Direction.DOWN:
-                    Debug.Log("UP");
-                    break;
-                case Direction.LEFT:
-                    Debug.Log("UP");
-                    break;
-                case Direction.UP:
-                    Debug.Log("Giu Nguyen");
-                    break;
-                case Direction.RIGHT:
-                    Debug.Log("UP");
-                    break;
-
-            }
+            int angle = 90;
+            player.transform.Find("Sprite").transform.eulerAngles = new Vector3(0, 0, angle);
+        
         }
 
         }
