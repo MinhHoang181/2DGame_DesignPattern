@@ -6,6 +6,7 @@ namespace DesignPattern.Factory
 {
     public class Player : MonoBehaviour, Character
     {
+        Command btnW, btnA, btnS, btnD;
         public int Health { get { return health; } set { health = value; } }
         public float Speed { get { return speed; } set { speed = value; } }
 
@@ -13,6 +14,14 @@ namespace DesignPattern.Factory
         [SerializeField] float speed;
 
         private WeaponController weapon;
+
+        public void Awake()
+        {
+            btnW = new MoveForward();
+            btnA = new MoveLeft();
+            btnS = new MoveBack();
+            btnD = new MoveRight();
+        }
 
         public void Start()
         {
@@ -36,12 +45,28 @@ namespace DesignPattern.Factory
 
         public void Move()
         {
-            float inputVer = Input.GetAxis("Vertical");
-            float inputHor = Input.GetAxis("Horizontal");
+            //float inputVer = Input.GetAxis("Vertical");
+            //float inputHor = Input.GetAxis("Horizontal");
 
-            transform.Translate(Vector3.up * inputVer * Time.deltaTime * speed);
-            transform.Translate(Vector3.right * inputHor * Time.deltaTime * speed);
-
+            //transform.Translate(Vector3.up * inputVer * Time.deltaTime * speed);
+            //transform.Translate(Vector3.right * inputHor * Time.deltaTime * speed);
+            
+            if (Input.GetKey(KeyCode.W))
+            {
+                btnW.Execute(transform);
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {  //horizon, verticle
+                btnA.Execute(transform);
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                btnS.Execute(transform);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                btnD.Execute(transform);
+            }
             //MoveVer(speed, transform);
             //MoveHor();
         }
