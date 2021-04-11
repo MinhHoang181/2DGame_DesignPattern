@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DesignPattern.Factory;
 using UnityEngine;
 
 namespace DesignPattern.Strategy
@@ -41,6 +42,7 @@ namespace DesignPattern.Strategy
 					iWeapon = gameObject.AddComponent<Bullet>();
 					break;
 			}
+			iWeapon.Player = transform.GetComponent<Player>();
 		}
 	}
 }

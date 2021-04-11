@@ -215,22 +215,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5616027315616532645, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: flameColor
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5616027315616532645, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: weaponType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5616027315616532645, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: weapons.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5616027315616532645, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: weapons.Array.data[0]
-      value: 
-      objectReference: {fileID: 1863614468976287261, guid: 4edbf35d7274c4de09eae15eb07f2f31, type: 3}
     - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -274,14 +258,6 @@ PrefabInstance:
     - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5616027315616532647, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: m_SortingLayer
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5616027315616532647, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -839260389
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
