@@ -7,6 +7,7 @@ namespace DesignPattern.Strategy
 {
 	public class WeaponController : MonoBehaviour
 	{
+		[SerializeField] Transform shootPoint;
 		[SerializeField] WeaponType weaponType;
 		[SerializeField] GameObject[] weapons;
 
@@ -32,6 +33,12 @@ namespace DesignPattern.Strategy
 		//Xử lý loại vũ khí
 		public void Weapon(WeaponType weaponType)
 		{
+			Component c = gameObject.GetComponent<IWeapon>() as Component;
+			if (c != null)
+			{
+				Destroy(c);
+			}
+
 			switch (weaponType)
 			{
 				case WeaponType.Bullet:
@@ -43,6 +50,7 @@ namespace DesignPattern.Strategy
 					break;
 			}
 			iWeapon.Player = transform.GetComponent<Player>();
+			iWeapon.ShootPoint = shootPoint;
 		}
 	}
 }

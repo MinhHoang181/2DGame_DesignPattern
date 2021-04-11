@@ -11,18 +11,19 @@ namespace DesignPattern.Strategy
         public int Damage { get { return damage; } set { damage = value; } }
         public GameObject Weapon { get { return weapon; } set { weapon = value; } }
         public Player Player { get { return player; } set { player = value; } }
+        public Transform ShootPoint { get { return shootPoint; } set { shootPoint = value; } }
 
-        [SerializeField] float speed = 5;
+        [SerializeField] float speed = 20;
         [SerializeField] int damage = 1;
 
         private GameObject weapon;
         private Player player;
+        private Transform shootPoint;
 
         public void Shoot()
         {
-            Vector3 initialPosition = new Vector3(transform.position.x, transform.position.y, 0);
             GameObject bullet = Instantiate(Weapon);
-            bullet.transform.position = initialPosition;
+            bullet.transform.position = shootPoint.position;
 
             int x = 0;
             int y = 0;

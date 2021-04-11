@@ -11,6 +11,7 @@ namespace DesignPattern.Strategy
         int Damage { get; set; }
         GameObject Weapon { get; set; }
         Player Player { get; set; }
+        Transform ShootPoint { get; set; }
 
         void Shoot();
     }
