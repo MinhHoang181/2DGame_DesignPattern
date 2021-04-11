@@ -24,6 +24,7 @@ namespace DesignPattern.Factory
             }
         }
         public float Speed { get { return speed; } set { speed = value; } }
+        public Direction Facing { get { return facing; } set { facing = value; } }
 
         [Header("Stats")]
         [SerializeField] int health;
@@ -34,6 +35,7 @@ namespace DesignPattern.Factory
         [SerializeField] TextMeshPro healthText;
 
         private WeaponController weapon;
+        private Direction facing = Direction.RIGHT;
 
         public void Awake()
         {
