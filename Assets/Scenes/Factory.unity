@@ -134,6 +134,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5616027315616532645, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
+      propertyPath: flameColor
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616027315616532645, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
+      propertyPath: weaponType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
       propertyPath: m_RootOrder
       value: 2
