@@ -17,10 +17,10 @@ namespace DesignPattern.Factory
 
         public void Awake()
         {
-            btnW = new MoveForward();
-            btnA = new MoveLeft();
-            btnS = new MoveBack();
-            btnD = new MoveRight();
+            btnW = new MoveForward(this);
+            btnA = new MoveLeft(this);
+            btnS = new MoveBack(this);
+            btnD = new MoveRight(this);
         }
 
         public void Start()
@@ -53,19 +53,19 @@ namespace DesignPattern.Factory
             
             if (Input.GetKey(KeyCode.W))
             {
-                btnW.Execute(transform);
+                btnW.Execute();
             }
             else if (Input.GetKey(KeyCode.A))
             {  //horizon, verticle
-                btnA.Execute(transform);
+                btnA.Execute();
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                btnS.Execute(transform);
+                btnS.Execute();
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                btnD.Execute(transform);
+                btnD.Execute();
             }
             //MoveVer(speed, transform);
             //MoveHor();

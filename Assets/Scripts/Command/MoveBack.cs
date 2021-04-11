@@ -1,21 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
+using DesignPattern.Factory;
 using UnityEngine;
 
 namespace DesignPattern.Commands
-
 {
-    public class MoveBack : Command
+    public class MoveBack : PlayerMove
     {
-
-        public override void Execute(Transform trans)
+        public MoveBack(Player player) : base(player)
         {
-            Move(trans);
+
         }
-
-        public override void Move(Transform trans)
+        public override void Move()
         {
-            trans.Translate(trans.up * -moveDistance);
+            player.transform.Translate(player.transform.up * -player.Speed  *Time.deltaTime);
         }
     }
 }
