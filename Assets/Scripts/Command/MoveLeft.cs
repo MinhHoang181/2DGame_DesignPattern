@@ -1,20 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using DesignPattern.Factory;
 
 namespace DesignPattern.Commands
 
 {
-    public class MoveLeft : Command
+    public class MoveLeft : PlayerMove
     {
-        public override void Execute(Transform trans)
+        public MoveLeft(Player player) : base(player)
         {
-            Move(trans);
+
         }
 
-        public override void Move(Transform trans)
+        public override void Move()
         {
-            trans.Translate(trans.right * -moveDistance);
+            player.transform.Translate(player.transform.right * -player.Speed);
         }
     }
 }
