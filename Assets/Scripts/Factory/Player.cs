@@ -8,7 +8,7 @@ namespace DesignPattern.Factory
 {
     public class Player : MonoBehaviour, Character
     {
-        Command btnW, btnA, btnS, btnD;
+        Command btnUp, btnLeft, btnDown, btnRight, btnAttack, btnChangeWeapon;
         public int Health { get { return health; } set { health = value; } }
         public int CurrentHealth
         {
@@ -39,10 +39,12 @@ namespace DesignPattern.Factory
 
         public void Awake()
         {
-            btnW = new MoveForward(this);
-            btnA = new MoveLeft(this);
-            btnS = new MoveBack(this);
-            btnD = new MoveRight(this);
+            btnUp = new MoveForward(this);
+            btnLeft = new MoveLeft(this);
+            btnDown = new MoveBack(this);
+            btnRight = new MoveRight(this);
+            btnAttack = new PlayerAttack(this);
+            btnChangeWeapon = new PlayerChangeWeapon(this);
         }
 
         public void Start()
@@ -56,12 +58,11 @@ namespace DesignPattern.Factory
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Attack(); // Tu lam
+                btnAttack.Execute();
             }
-            if (Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.Q))
             {
-                Debug.Log("Press C");
-                ChangeWeapon(); // Tu lam
+                btnChangeWeapon.Execute();
             }
         }
 
@@ -76,19 +77,19 @@ namespace DesignPattern.Factory
             
             if (Input.GetKey(KeyCode.W))
             {
-                btnW.Execute();
+                btnUp.Execute();
             }
             else if (Input.GetKey(KeyCode.A))
             {  //horizon, verticle
-                btnA.Execute();
+                btnLeft.Execute();
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                btnS.Execute();
+                btnDown.Execute();
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                btnD.Execute();
+                btnRight.Execute();
             }
         }
 
