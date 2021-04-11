@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DesignPattern.Commands;
 namespace DesignPattern.Factory
 {
     public class Player : MonoBehaviour, Character
