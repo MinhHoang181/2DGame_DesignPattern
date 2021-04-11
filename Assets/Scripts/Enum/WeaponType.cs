@@ -1,5 +1,4 @@
 public enum WeaponType
 {
-	Missile,
-	Bullet
+	Bullet,
 }

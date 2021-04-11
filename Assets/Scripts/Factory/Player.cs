@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DesignPattern.Commands;
+using DesignPattern.Strategy;
 using TMPro;
 
 namespace DesignPattern.Factory
@@ -48,6 +49,8 @@ namespace DesignPattern.Factory
         public void Start()
         {
             Setting();
+
+            weapon = transform.GetComponent<WeaponController>();
         }
 
         public void Update()

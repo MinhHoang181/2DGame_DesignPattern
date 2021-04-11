@@ -2,67 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponController : MonoBehaviour
+namespace DesignPattern.Strategy
 {
-    [SerializeField] WeaponType weaponType;
-    [SerializeField] FlameType flameColor;
-
-	[SerializeField] GameObject[] weapons;
-
-    private IWeapon iWeapon;
-    private IFlame iFlame;
-
-
-	// Start is called before the first frame update
-	void Start()
-    {
-		Weapon(weaponType);
-		Flame(flameColor);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-		
-	}
-
-	public void Fire()
+	public class WeaponController : MonoBehaviour
 	{
-		iWeapon.Shoot();
-		iFlame.ShowFlame();
-	}
+		[SerializeField] WeaponType weaponType;
+		[SerializeField] GameObject[] weapons;
 
-	//Xử lý loại vũ khí
-	public void Weapon(WeaponType weaponType)
-	{
-		switch (weaponType)
+		private IWeapon iWeapon;
+
+		// Start is called before the first frame update
+		void Start()
 		{
-
-			case WeaponType.Missile:
-				iWeapon = new Missile();
-				break;
-			case WeaponType.Bullet:
-				iWeapon = new Bullet();
-				break;
-			default:
-				iWeapon = new Bullet();
-				break;
+			Weapon(weaponType);
 		}
-	}
 
-	public void Flame(FlameType flame)
-	{
-		switch (flame)
+		// Update is called once per frame
+		void Update()
 		{
-			case FlameType.Blue:
-				iFlame = new BlueFlame();
-				break;
-			case FlameType.Red:
-				iFlame = new RedFlame();
-				break;
-			default:
-				iFlame = new BlueFlame();
-				break;
+
+		}
+
+		public void Fire()
+		{
+			iWeapon.Shoot();
+		}
+
+		//Xử lý loại vũ khí
+		public void Weapon(WeaponType weaponType)
+		{
+			switch (weaponType)
+			{
+				case WeaponType.Bullet:
+					iWeapon = gameObject.AddComponent<Bullet>();
+					iWeapon.Weapon = weapons[0];
+					break;
+				default:
+					iWeapon = gameObject.AddComponent<Bullet>();
+					break;
+			}
 		}
 	}
 }

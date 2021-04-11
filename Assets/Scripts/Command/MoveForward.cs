@@ -11,7 +11,6 @@ namespace DesignPattern.Commands
 
         }
 
-
         public override void Move()
         {
             player.transform.Translate(player.transform.up * player.Speed * Time.deltaTime * 0.7f);

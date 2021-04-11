@@ -62,7 +62,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 0
-  flameColor: 1
+  weapons:
+  - {fileID: 1863614468976287261, guid: 4edbf35d7274c4de09eae15eb07f2f31, type: 3}
 --- !u!1 &6071250999511816719
 GameObject:
   m_ObjectHideFlags: 0

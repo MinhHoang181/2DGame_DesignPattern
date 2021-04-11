@@ -1,8 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DesignPattern.Factory;
 
-public interface IWeapon
+namespace DesignPattern.Strategy
 {
-	void Shoot();
+    public interface IWeapon
+    {
+        float Speed { get; set; }
+        int Damage { get; set; }
+        GameObject Weapon { get; set; }
+
+        void Shoot();
+    }
 }
