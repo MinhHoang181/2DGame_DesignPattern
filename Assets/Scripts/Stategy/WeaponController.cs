@@ -7,11 +7,14 @@ public class WeaponController : MonoBehaviour
     [SerializeField] WeaponType weaponType;
     [SerializeField] FlameType flameColor;
 
+	[SerializeField] GameObject[] weapons;
+
     private IWeapon iWeapon;
     private IFlame iFlame;
 
-    // Start is called before the first frame update
-    void Start()
+
+	// Start is called before the first frame update
+	void Start()
     {
 		Weapon(weaponType);
 		Flame(flameColor);
@@ -20,8 +23,8 @@ public class WeaponController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
+		
+	}
 
 	public void Fire()
 	{
