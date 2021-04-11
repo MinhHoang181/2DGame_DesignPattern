@@ -12,7 +12,9 @@ namespace DesignPattern.Factory
         public void Move();
         public void Attack();
 
-        // public void OnHit();
+        public void Setting();
+
+        public void OnDamaged(int damage);
 
         //public void Dead();
     }
