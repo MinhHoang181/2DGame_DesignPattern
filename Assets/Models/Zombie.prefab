@@ -98,6 +98,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 50
   speed: 2
+  damage: 5
+  timeToAttack: 1
 --- !u!1 &2750794322122003716
 GameObject:
   m_ObjectHideFlags: 0

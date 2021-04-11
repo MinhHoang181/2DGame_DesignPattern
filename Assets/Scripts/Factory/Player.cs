@@ -103,10 +103,15 @@ namespace DesignPattern.Factory
             weapon.Weapon(WeaponType.Bullet);
         }
 
-        public void OnDamaged(int damage)
+        public void TakeDamage(int damage)
         {
             // bi danh/trung dan
             CurrentHealth -= damage;
+        }
+
+        public void Die()
+        {
+            Debug.Log("Game over");
         }
     }
 }

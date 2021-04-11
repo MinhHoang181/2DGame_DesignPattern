@@ -14,8 +14,8 @@ namespace DesignPattern.Factory
 
         public void Setting();
 
-        public void OnDamaged(int damage);
+        public void TakeDamage(int damage);
 
-        //public void Dead();
+        public void Die();
     }
 }
