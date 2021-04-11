@@ -6,7 +6,6 @@ namespace DesignPattern.Commands
     public abstract class PlayerMove : Command
     {
         private protected Player player;
-        private protected float moveDistance = 0.5f;
 
         public PlayerMove(Player player)
         {

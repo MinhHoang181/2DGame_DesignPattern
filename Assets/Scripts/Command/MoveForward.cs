@@ -1,5 +1,5 @@
 using DesignPattern.Factory;
-
+using UnityEngine;
 
 namespace DesignPattern.Commands
 
@@ -14,7 +14,7 @@ namespace DesignPattern.Commands
 
         public override void Move()
         {
-            player.transform.Translate(player.transform.up * player.Speed);
+            player.transform.Translate(player.transform.up * player.Speed * Time.deltaTime * 0.7f);
         }
     }
 }
