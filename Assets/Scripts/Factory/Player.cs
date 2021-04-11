@@ -2,16 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DesignPattern.Commands;
+using TMPro;
+
 namespace DesignPattern.Factory
 {
     public class Player : MonoBehaviour, Character
     {
         Command btnW, btnA, btnS, btnD;
         public int Health { get { return health; } set { health = value; } }
+        public int CurrentHealth
+        {
+            get { return currentHealth; }
+            set
+            {
+                currentHealth = Mathf.Max(0, value);
+                healthText.text = CurrentHealth + "/" + Health;
+                if (currentHealth.Equals(0))
+                {
+                    // Chet
+                } 
+            }
+        }
         public float Speed { get { return speed; } set { speed = value; } }
 
+        [Header("Stats")]
         [SerializeField] int health;
+        private int currentHealth;
         [SerializeField] float speed;
+
+        [Header("UI")]
+        [SerializeField] TextMeshPro healthText;
 
         private WeaponController weapon;
 
@@ -21,11 +41,13 @@ namespace DesignPattern.Factory
             btnA = new MoveLeft();
             btnS = new MoveBack();
             btnD = new MoveRight();
+
+            weapon = transform.GetComponent<WeaponController>();
         }
 
         public void Start()
         {
-            weapon = transform.GetComponent<WeaponController>();
+            Setting();
         }
 
         public void Update()
@@ -43,13 +65,14 @@ namespace DesignPattern.Factory
             }
         }
 
+        public void Setting()
+        {
+            CurrentHealth = Health;
+            healthText.text = CurrentHealth + "/" + Health;
+        }
+
         public void Move()
         {
-            //float inputVer = Input.GetAxis("Vertical");
-            //float inputHor = Input.GetAxis("Horizontal");
-
-            //transform.Translate(Vector3.up * inputVer * Time.deltaTime * speed);
-            //transform.Translate(Vector3.right * inputHor * Time.deltaTime * speed);
             
             if (Input.GetKey(KeyCode.W))
             {
@@ -67,8 +90,6 @@ namespace DesignPattern.Factory
             {
                 btnD.Execute(transform);
             }
-            //MoveVer(speed, transform);
-            //MoveHor();
         }
 
         public void Attack() // 
@@ -80,6 +101,12 @@ namespace DesignPattern.Factory
         public void ChangeWeapon() // Dinh nghia
         {
             weapon.Weapon(WeaponType.Bullet);
+        }
+
+        public void OnDamaged(int damage)
+        {
+            // bi danh/trung dan
+            CurrentHealth -= damage;
         }
     }
 }

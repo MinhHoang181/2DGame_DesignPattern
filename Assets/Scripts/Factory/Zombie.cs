@@ -9,16 +9,16 @@ namespace DesignPattern.Factory
         public int Health { get { return health; } set { health = value; } }
         public float Speed { get { return speed; } set { speed = value; } }
 
+        [Header("Stats")]
         [SerializeField] protected int health;
-
         [SerializeField] protected float speed;
 
-        protected Transform player;
+        protected Player player;
 
         // Start is called before the first frame update
         void Start()
         {
-            player = GameObject.FindGameObjectWithTag("Player").transform;
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
             // Observer
             // subrice vao super zombie 
@@ -32,7 +32,7 @@ namespace DesignPattern.Factory
 
         public virtual void Action()
         {
-            if (Vector3.Distance(transform.position, player.position) > 1f)
+            if (Vector3.Distance(transform.position, player.transform.position) > 1f)
             {
                 Move();
             }
@@ -42,10 +42,15 @@ namespace DesignPattern.Factory
             }
         }
 
+        public void Setting()
+        {
+
+        }
+
         public virtual void Move()
         {
             // huong mat ve phia nguoi choi
-            transform.LookAt(player.position);
+            transform.LookAt(player.transform.position);
             transform.Rotate(new Vector3(0, -90, 0), Space.Self);
 
             // di chuyen toi phia truoc
@@ -54,7 +59,13 @@ namespace DesignPattern.Factory
 
         public void Attack()
         {
-            Debug.Log(transform.name + " attack player");
+            //Debug.Log(transform.name + " attack player");
+            player.OnDamaged(1);
+        }
+
+        public void OnDamaged(int damage)
+        {
+            
         }
     }
 }
