@@ -17,6 +17,7 @@ namespace DesignPattern.Commands
         public override void SetFacing()
         {
             int angle = 270;
+            player.Facing = Direction.DOWN;
             player.transform.Find("Sprite").transform.eulerAngles = new Vector3(0, 0, angle);
         }
     }
