@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Character
+namespace DesignPattern.Factory
 {
-    int Health { get; set; }
-    float Speed { get; set; }
+    public interface Character
+    {
+        int Health { get; set; }
+        float Speed { get; set; }
 
-    public void Move();
-    public void Attack();
+        public void Move();
+        public void Attack();
 
-    // public void OnHit();
+        // public void OnHit();
 
-    //public void Dead();
+        //public void Dead();
+    }
 }
