@@ -21,7 +21,7 @@ namespace DesignPattern.Commands
 
         public void Attack()
         {
-            //player.Attack();
+            player.Attack();
 
         }
     }
