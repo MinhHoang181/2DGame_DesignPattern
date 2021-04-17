@@ -43,6 +43,9 @@ namespace DesignPattern.Strategy
 				case WeaponType.Bullet:
 					iWeapon = gameObject.AddComponent<Bullet>();
 					break;
+				case WeaponType.Piston:
+					iWeapon = gameObject.AddComponent<Piston>();
+					break;
 				default:
 					iWeapon = gameObject.AddComponent<Bullet>();
 					break;

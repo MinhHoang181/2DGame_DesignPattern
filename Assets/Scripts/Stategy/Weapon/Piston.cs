@@ -12,6 +12,7 @@ namespace DesignPattern.Strategy
         public GameObject Weapon { get { return weapon; } }
 
         [SerializeField] int damage = 1;
+        [SerializeField] float distance = 10;
 
         private Player player;
         private Transform shootPoint;
@@ -25,7 +26,28 @@ namespace DesignPattern.Strategy
 
         public void Shoot()
         {
-            
+            LineRenderer line = Instantiate(Weapon).GetComponent<LineRenderer>();
+            line.SetPosition(0, shootPoint.position);
+            float x = shootPoint.position.x;
+            float y = shootPoint.position.y;
+            switch (player.Facing)
+            {
+                case Direction.RIGHT:
+                    x += distance;
+                    break;
+                case Direction.LEFT:
+                    x -= distance;
+                    break;
+                case Direction.UP:
+                    y += distance;
+                    break;
+                case Direction.DOWN:
+                    y -= distance;
+                    break;
+                default:
+                    break;
+            }
+            line.SetPosition(1, new Vector3(x, y, 0));
         }
     }
 }
