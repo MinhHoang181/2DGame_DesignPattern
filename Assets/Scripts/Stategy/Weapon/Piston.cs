@@ -8,10 +8,12 @@ namespace DesignPattern.Strategy
     public class Piston : MonoBehaviour, IWeapon
     {
         public int Damage { get { return damage; } set { damage = value; } }
+        public int KnockBackStrength { get { return knockBackStrength; } set { knockBackStrength = value; } }
         public Transform ShootPoint { get { return shootPoint; } set { shootPoint = value; } }
         public GameObject Weapon { get { return weapon; } }
 
         [SerializeField] int damage = 1;
+        [SerializeField] int knockBackStrength = 100;
         [SerializeField] float distance = 10;
 
         private Player player;
@@ -47,7 +49,18 @@ namespace DesignPattern.Strategy
                 default:
                     break;
             }
-            line.SetPosition(1, new Vector3(x, y, 0));
+            Vector3 target = new Vector3(x, y, 0);
+            line.SetPosition(1, target);
+
+            RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, target);
+            if (hit)
+            {
+                Character character = hit.collider.GetComponent<Character>();
+                if (character != null)
+                {
+                    character.TakeDamage(damage, KnockBackStrength, player.Facing);
+                }
+            }
         }
     }
 }

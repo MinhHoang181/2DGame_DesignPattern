@@ -107,7 +107,7 @@ namespace DesignPattern.Factory
             weapon.Weapon(WeaponType.Bullet);
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, float knockBackStrength, Direction directionTakeDamage)
         {
             // bi danh/trung dan
             CurrentHealth -= damage;

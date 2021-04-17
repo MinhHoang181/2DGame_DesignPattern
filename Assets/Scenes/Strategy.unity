@@ -174,33 +174,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1253356904306345081, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
-      propertyPath: m_SortingLayer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1253356904306345081, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1303225253
+    - target: {fileID: 1253356904306345080, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
+      propertyPath: timeStun
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1253356904306345083, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
-    - target: {fileID: 1253356904306345083, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2750794322122003716, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3565157286561246944, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4542458153337195148, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
-      propertyPath: m_Layer
-      value: 7
+    - target: {fileID: 2624371399054483240, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
+      propertyPath: m_LinearDrag
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}

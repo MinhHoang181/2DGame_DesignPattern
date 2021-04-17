@@ -14,7 +14,7 @@ namespace DesignPattern.Factory
 
         public void Setting();
 
-        public void TakeDamage(int damage);
+        public void TakeDamage(int damage, float knockBackStrength, Direction directionTakeDamage);
 
         public void Die();
     }

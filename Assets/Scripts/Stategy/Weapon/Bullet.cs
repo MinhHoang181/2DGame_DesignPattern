@@ -8,11 +8,13 @@ namespace DesignPattern.Strategy
     public class Bullet : MonoBehaviour, IWeapon
     {
         public int Damage { get { return damage; } set { damage = value; } }
+        public int KnockBackStrength { get { return knockBackStrength; } set { knockBackStrength = value; } }
         public Transform ShootPoint { get { return shootPoint; } set { shootPoint = value; } }
         public GameObject Weapon { get { return weapon; } }
 
         [SerializeField] float speed = 20;
         [SerializeField] int damage = 1;
+        [SerializeField] int knockBackStrength = 100;
 
         private GameObject weapon;
         private Player player;

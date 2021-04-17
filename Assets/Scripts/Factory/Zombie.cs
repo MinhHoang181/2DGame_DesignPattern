@@ -16,6 +16,7 @@ namespace DesignPattern.Factory
                 if (currentHealth.Equals(0))
                 {
                     // Chet
+                    Die();
                 }
             }
         }
@@ -27,17 +28,26 @@ namespace DesignPattern.Factory
         [SerializeField] protected float speed;
         [SerializeField] int damage;
         [SerializeField] float timeToAttack;
+        [SerializeField] float timeStun;
+
         private bool isAttack = false;
+        private bool isTakeDamage = false;
 
         protected Player player;
+        protected Rigidbody2D rigBody;
+
+        protected Coroutine stunCoroutine;
+
+        private void Awake()
+        {
+            Setting();
+        }
 
         // Start is called before the first frame update
         void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-
-            // Observer
-            // subrice vao super zombie 
+            rigBody = gameObject.GetComponent<Rigidbody2D>();
         }
 
         // Update is called once per frame
@@ -48,11 +58,15 @@ namespace DesignPattern.Factory
 
         public virtual void Action()
         {
+            if (isTakeDamage) return;
+
             if (Vector3.Distance(transform.position, player.transform.position) > 1f)
             {
                 Move();
+                return;
             }
-            else if (!isAttack)
+
+            if (!isAttack)
             {
                 StartCoroutine(StartAttack());
             }
@@ -60,7 +74,7 @@ namespace DesignPattern.Factory
 
         public void Setting()
         {
-
+            CurrentHealth = Health;
         }
 
         public virtual void Move()
@@ -84,17 +98,55 @@ namespace DesignPattern.Factory
         public void Attack()
         {
             //Debug.Log(transform.name + " attack player");
-            player.TakeDamage(damage);
+            player.TakeDamage(damage, 0, Direction.DOWN);
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage,float knockBackStrength ,Direction directionTakeDamage)
         {
             CurrentHealth -= damage;
+
+            KnockBack(knockBackStrength ,directionTakeDamage);
+
+            if (stunCoroutine != null)
+            {
+                StopCoroutine(stunCoroutine);
+            }
+            stunCoroutine = StartCoroutine(OnStunned(timeStun));
         }
 
         public void Die()
         {
             Destroy(gameObject);
+        }
+
+        public void KnockBack(float forceStrength ,Direction directionTakeDamage)
+        {
+            Vector2 direction = Vector2.zero;
+            switch (directionTakeDamage)
+            {
+                case Direction.RIGHT:
+                    direction.x = forceStrength;
+                    break;
+                case Direction.LEFT:
+                    direction.x = -forceStrength;
+                    break;
+                case Direction.UP:
+                    direction.y = forceStrength;
+                    break;
+                case Direction.DOWN:
+                    direction.y = -forceStrength;
+                    break;
+                default:
+                    break;
+            }
+            rigBody.AddForce(direction);
+        }
+
+        IEnumerator OnStunned(float second)
+        {
+            isTakeDamage = true;
+            yield return new WaitForSeconds(second);
+            isTakeDamage = false;
         }
     }
 }
