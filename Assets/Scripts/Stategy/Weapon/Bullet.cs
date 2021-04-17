@@ -9,6 +9,7 @@ namespace DesignPattern.Strategy
     {
         public int Damage { get { return damage; } set { damage = value; } }
         public Transform ShootPoint { get { return shootPoint; } set { shootPoint = value; } }
+        public GameObject Weapon { get { return weapon; } }
 
         [SerializeField] float speed = 20;
         [SerializeField] int damage = 1;
@@ -19,13 +20,13 @@ namespace DesignPattern.Strategy
 
         public void Start()
         {
-            weapon = (GameObject)Resources.Load("Prefabs/Bullet", typeof(GameObject));
+            weapon = (GameObject) Resources.Load("Prefabs/Bullet", typeof(GameObject));
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         }
 
         public void Shoot()
         {
-            GameObject bullet = Instantiate(weapon);
+            GameObject bullet = Instantiate(Weapon);
             bullet.transform.position = shootPoint.position;
 
             int x = 0;
