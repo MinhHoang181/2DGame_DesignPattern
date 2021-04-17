@@ -9,7 +9,6 @@ namespace DesignPattern.Strategy
 	{
 		[SerializeField] Transform shootPoint;
 		[SerializeField] WeaponType weaponType;
-		[SerializeField] GameObject[] weapons;
 
 		private IWeapon iWeapon;
 
@@ -43,13 +42,11 @@ namespace DesignPattern.Strategy
 			{
 				case WeaponType.Bullet:
 					iWeapon = gameObject.AddComponent<Bullet>();
-					iWeapon.Weapon = weapons[0];
 					break;
 				default:
 					iWeapon = gameObject.AddComponent<Bullet>();
 					break;
 			}
-			iWeapon.Player = transform.GetComponent<Player>();
 			iWeapon.ShootPoint = shootPoint;
 		}
 	}

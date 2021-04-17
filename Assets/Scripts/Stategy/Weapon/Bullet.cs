@@ -7,10 +7,7 @@ namespace DesignPattern.Strategy
 {
     public class Bullet : MonoBehaviour, IWeapon
     {
-        public float Speed { get { return speed; } set { speed = value; } }
         public int Damage { get { return damage; } set { damage = value; } }
-        public GameObject Weapon { get { return weapon; } set { weapon = value; } }
-        public Player Player { get { return player; } set { player = value; } }
         public Transform ShootPoint { get { return shootPoint; } set { shootPoint = value; } }
 
         [SerializeField] float speed = 20;
@@ -20,14 +17,20 @@ namespace DesignPattern.Strategy
         private Player player;
         private Transform shootPoint;
 
+        public void Start()
+        {
+            weapon = (GameObject)Resources.Load("Prefabs/Bullet", typeof(GameObject));
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        }
+
         public void Shoot()
         {
-            GameObject bullet = Instantiate(Weapon);
+            GameObject bullet = Instantiate(weapon);
             bullet.transform.position = shootPoint.position;
 
             int x = 0;
             int y = 0;
-            switch (Player.Facing)
+            switch (player.Facing)
             {
                 case Direction.RIGHT:
                     x = 1;

@@ -7,10 +7,7 @@ namespace DesignPattern.Strategy
 {
     public interface IWeapon
     {
-        float Speed { get; set; }
         int Damage { get; set; }
-        GameObject Weapon { get; set; }
-        Player Player { get; set; }
         Transform ShootPoint { get; set; }
 
         void Shoot();
