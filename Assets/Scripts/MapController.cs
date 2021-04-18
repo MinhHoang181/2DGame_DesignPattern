@@ -30,20 +30,11 @@ public class MapController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startPoint = transform.Find("StartPoint").position;
-        endPoint = transform.Find("EndPoint").position;
-        Vector2 size = endPoint - startPoint;
-        Debug.Log(size);
-        CreateGridMap();
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    private void CreateGridMap()
-    {
     }
 }

@@ -235,10 +235,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
-    - target: {fileID: 1253356904306345083, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
 --- !u!1001 &1805956609
@@ -248,10 +244,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4023790435845561371, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.7
-      objectReference: {fileID: 0}
     - target: {fileID: 5616027315616532641, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
       propertyPath: m_Name
       value: Player
@@ -262,11 +254,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.5
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.5
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
       propertyPath: m_LocalPosition.z
