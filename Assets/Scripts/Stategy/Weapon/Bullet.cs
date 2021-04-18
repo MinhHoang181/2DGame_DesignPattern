@@ -33,23 +33,6 @@ namespace DesignPattern.Strategy
 
             int x = 0;
             int y = 0;
-            switch (player.Facing)
-            {
-                case Direction.RIGHT:
-                    x = 1;
-                    break;
-                case Direction.LEFT:
-                    x = -1;
-                    break;
-                case Direction.UP:
-                    y = 1;
-                    break;
-                case Direction.DOWN:
-                    y = -1;
-                    break;
-                default:
-                    break;
-            }
 
             bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(x, y) * speed;
         }
