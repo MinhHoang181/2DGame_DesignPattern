@@ -94,7 +94,7 @@ MonoBehaviour:
   shootPoint: {fileID: 4023790435845561371}
   weaponType: 0
   weapons:
-  - {fileID: 1863614468976287261, guid: 4edbf35d7274c4de09eae15eb07f2f31, type: 3}
+  - {fileID: 0}
 --- !u!1 &6071250999511816719
 GameObject:
   m_ObjectHideFlags: 0
