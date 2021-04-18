@@ -29,7 +29,7 @@ namespace DesignPattern.Strategy
 			iWeapon.Shoot();
 		}
 
-		//Xử lý loại vũ khí
+		//X? l? lo?i v? kh?
 		public void Weapon(WeaponType weaponType)
 		{
 			Component c = gameObject.GetComponent<IWeapon>() as Component;

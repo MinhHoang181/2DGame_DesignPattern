@@ -50,6 +50,7 @@ MonoBehaviour:
   speed: 2
   damage: 5
   timeToAttack: 1
+  timeStun: 0.5
 --- !u!58 &1796866750
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -79,7 +80,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 20
+  m_LinearDrag: 10
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}

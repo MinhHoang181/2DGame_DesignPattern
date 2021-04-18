@@ -40,7 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5616027315616532646}
   - component: {fileID: 5616027315616532644}
-  - component: {fileID: 5616027315616532645}
+  - component: {fileID: 3142922074951999197}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -79,7 +79,7 @@ MonoBehaviour:
   health: 100
   speed: 10
   healthText: {fileID: 3929016028261201406}
---- !u!114 &5616027315616532645
+--- !u!114 &3142922074951999197
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,9 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootPoint: {fileID: 4023790435845561371}
-  weaponType: 0
-  weapons:
-  - {fileID: 0}
+  weaponType: 1
 --- !u!1 &6071250999511816719
 GameObject:
   m_ObjectHideFlags: 0
