@@ -31,7 +31,7 @@ public class MapController : MonoBehaviour
 
     private int width;
     private int height;
-    private GridMap<int> gridMap;
+    private GridPathNode grid;
 
     // Start is called before the first frame update
     void Start()
@@ -39,12 +39,12 @@ public class MapController : MonoBehaviour
         width = Mathf.FloorToInt(Mathf.Abs(endPoint.position.x - startPoint.position.x));
         height = Mathf.FloorToInt(Mathf.Abs(endPoint.position.y - startPoint.position.y));
 
-        gridMap = new GridMap<int>(width, height, GetComponent<Grid>().cellSize, transform.position);
+        grid = new GridPathNode(width, height, GetComponent<Grid>().cellSize, transform.position);
 
-        gridMap.ScanTilemap(ground, 1);
-        gridMap.ScanTilemap(blockTile, 2);
+        grid.ScanTilemap(ground, new PathNode(value: 1, isWalkable: true));
+        grid.ScanTilemap(blockTile, new PathNode(value: 10, isWalkable: false));
 
-        gridMap.DebugGrid();
+        grid.DebugGrid(sizeText: 20);
     }
 
     // Update is called once per frame

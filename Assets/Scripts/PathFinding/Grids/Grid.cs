@@ -1,24 +1,31 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 namespace Pathfinding
 {
-    public class GridMap<GridObject>
+    public enum DirectionType
+    {
+        FOUR_DIRECTIONS,
+        EIGHT_DIRECTIONS,
+    }
+
+    public class Grid<GridObject>
     {
         /// <summary>
         /// Tra ve chieu dai cua Grid
         /// </summary>
-        public int Width { get { return width; } }
+        public int Width { get; protected set; }
         /// <summary>
         /// Tra ve chieu cao cua Grid
         /// </summary>
-        public int Height { get { return height; } }
+        public int Height { get; protected set; }
         /// <summary>
         /// Tra ve kich thuoc cua mot o trong grid
         /// </summary>
-        public Vector2 CellSize { get { return cellSize; } }
+        public Vector2 CellSize { get; protected set; }
         /// <summary>
         /// Event bat su kien thay doi gia tri trong grid
         /// </summary>
@@ -29,12 +36,9 @@ namespace Pathfinding
             public int y;
         }
 
-        private int width;
-        private int height;
-        private Vector2 cellSize;
-        private Vector3 originPosition;
-        private GridObject[,] gridArray;
-        private Text[,] debugTextArray;
+        protected Vector3 originPosition;
+        protected GridObject[,] gridArray;
+        protected Text[,] debugTextArray;
 
         /// <summary>Tao GridMap gom chieu rong, chieu cao.
         /// <para>- Danh cho cac loai object value co ban nhu Bool, Int, Float, ...</para>
@@ -43,15 +47,15 @@ namespace Pathfinding
         /// </summary>
         /// <param name="width">chieu dai Grid</param>
         /// <param name="height">chieu rong Grid</param>
-        public GridMap(int width, int height)
+        public Grid(int width, int height)
         {
-            this.width = width;
-            this.height = height;
-            this.cellSize = Vector2.one;
-            this.originPosition = Vector3.zero;
+            Width = width;
+            Height = height;
+            CellSize = Vector2.one;
+            originPosition = Vector3.zero;
 
-            gridArray = new GridObject[width, height];
-            debugTextArray = new Text[width, height];
+            gridArray = new GridObject[Width, Height];
+            debugTextArray = new Text[Width, Height];
         }
 
         /// <summary>Tao GridMap gom chieu rong, chieu cao, kich thuoc 1 o, vi tri goc.
@@ -61,46 +65,20 @@ namespace Pathfinding
         /// <param name="height">chieu rong Grid</param>
         /// <param name="cellSize">kich thuoc 1 o Grid</param>
         /// <param name="originPosition">toa do goc</param>
-        public GridMap(int width, int height, Vector2 cellSize, Vector3 originPosition)
+        public Grid(int width, int height, Vector2 cellSize, Vector3 originPosition)
         {
-            this.width = width;
-            this.height = height;
-            this.cellSize = cellSize;
+            Width = width;
+            Height = height;
+            CellSize = cellSize;
             this.originPosition = originPosition;
 
-            gridArray = new GridObject[width, height];
-            debugTextArray = new Text[width, height];
+            gridArray = new GridObject[Width, Height];
+            debugTextArray = new Text[Width, Height];
         }
 
-        /// <summary>Tao GridMap gom chieu rong, chieu cao, kich thuoc 1 o, vi tri goc.
-        /// <para>- Danh cho cac loai object tu dinh nghia hoac phuc tap</para>
-        /// </summary>
-        /// <param name="width">chieu dai Grid</param>
-        /// <param name="height">chieu rong Grid</param>
-        /// <param name="cellSize">kich thuoc 1 o Grid</param>
-        /// <param name="originPosition">toa do goc</param>
-        /// <param name="gridObject">kieu object moi, vd: (GridMap<GridObject> g, int x, int y) => new GridObject(g, x, y)</param>
-        public GridMap(int width, int height, Vector2 cellSize, Vector3 originPosition, Func<GridMap<GridObject>, int, int, GridObject> gridObject)
+        public Vector3 GetWorldPosition(int x, int y)
         {
-            this.width = width;
-            this.height = height;
-            this.cellSize = cellSize;
-            this.originPosition = originPosition;
-
-            gridArray = new GridObject[width, height];
-            for (int x = 0; x < gridArray.GetLength(0); x++)
-            {
-                for (int y = 0; y < gridArray.GetLength(0); y++)
-                {
-                    gridArray[x, y] = gridObject(this, x, y);
-                }
-            }
-            debugTextArray = new Text[width, height];
-        }
-
-        private Vector3 GetWorldPosition(int x, int y)
-        {
-            return new Vector3(x * cellSize.x, y * cellSize.y) + originPosition;
+            return new Vector3(x * CellSize.x, y * CellSize.y) + originPosition;
         }
 
         /// <summary>
@@ -109,9 +87,9 @@ namespace Pathfinding
         /// <param name="x">toa do x trong grid</param>
         /// <param name="y">toa do y trong grid</param>
         /// <param name="value">gia tri tai vi tri [x, y]</param>
-        public void SetGridObject(int x, int y, GridObject value)
+        public virtual void SetGridObject(int x, int y, GridObject value)
         {
-            if (x >= 0 && y >= 0 && x < width && y < height)
+            if (x >= 0 && y >= 0 && x < Width && y < Height)
             {
                 gridArray[x, y] = value;
                 TriggerGridObjectChanged(x, y);
@@ -151,7 +129,7 @@ namespace Pathfinding
         /// <returns>tra ve kieu object tuong ung</returns>
         public GridObject GetGridObject(int x, int y)
         {
-            if (x >= 0 && y >= 0 && x < width && y < height)
+            if (x >= 0 && y >= 0 && x < Width && y < Height)
             {
                 return gridArray[x, y];
             }
@@ -180,8 +158,8 @@ namespace Pathfinding
         /// <param name="y">toa do y tren grid</param>
         public void GetXY(Vector3 worldPosition, out int x, out int y)
         {
-            x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize.x);
-            y = Mathf.FloorToInt((worldPosition - originPosition).y / cellSize.y);
+            x = Mathf.FloorToInt((worldPosition - originPosition).x / CellSize.x);
+            y = Mathf.FloorToInt((worldPosition - originPosition).y / CellSize.y);
         }
 
         /// <summary>
@@ -189,7 +167,7 @@ namespace Pathfinding
         /// </summary>
         /// <param name="tilemap">tilemap dung de quet</param>
         /// <param name="value">gia tri cua tilebase tren gridmap</param>
-        public void ScanTilemap(Tilemap tilemap, GridObject value)
+        public virtual void ScanTilemap(Tilemap tilemap, GridObject value)
         {
             BoundsInt bounds = tilemap.cellBounds;
             TileBase[] tileArray = tilemap.GetTilesBlock(bounds);
@@ -207,10 +185,67 @@ namespace Pathfinding
             }
         }
 
+        public IEnumerable GetNeighbors(int x, int y, DirectionType directionType)
+        {
+            int dirX, dirY;
+            switch (directionType)
+            {
+                case DirectionType.EIGHT_DIRECTIONS:
+                    for (dirX = -1; dirX <= 1; dirX++)
+                    {
+                        for (dirY = -1; dirY <= 1; dirY++)
+                        {
+                            var neighbor = GetNeighbor(x, y, dirX, dirY);
+                            if (!neighbor.Equals(default))
+                            {
+                                yield return neighbor;
+                            }
+                        }
+                    }
+                    break;
+                case DirectionType.FOUR_DIRECTIONS:
+                default:
+                    dirY = 0;
+                    for (dirX = -1; dirX <= 1; dirX++)
+                    {
+                        var neighbor = GetNeighbor(x, y, dirX, dirY);
+                        if (!neighbor.Equals(default))
+                        {
+                            yield return neighbor;
+                        }
+                    }
+                    dirX = 0;
+                    for (dirY = -1; dirY <= 1; y++)
+                    {
+                        var neighbor = GetNeighbor(x, y, dirX, dirY);
+                        if (!neighbor.Equals(default))
+                        {
+                            yield return neighbor;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        protected GridObject GetNeighbor(int x, int y, int dirX, int dirY)
+        {
+            if (x == 0 && y == 0)
+            {
+                return default;
+            }
+            int checkX = x + dirX;
+            int checkY = y + dirY;
+            if (checkX >= 0 && checkX < Width && checkY >= 0 && checkY < Height)
+            {
+                return gridArray[checkX, checkY];
+            }
+            return default;
+        }
+
         /// <summary>
         /// ve grid debug len scene
         /// </summary>
-        public void DebugGrid()
+        public void DebugGrid(int sizeText = 20)
         {
             float duration = Mathf.Infinity;
             GameObject canvas = new GameObject("Debug", typeof(Canvas));
@@ -223,22 +258,25 @@ namespace Pathfinding
                 for (int y = 0; y < gridArray.GetLength(1); y++)
                 {
                     GridObject value = GetGridObject(x, y);
-                    if (value.Equals(default(GridObject)))
+                    if (value == null)
                     {
                         DrawSquare(x, y, Color.red, duration);
-                    }
-                    else
+                        continue;
+                    } else if (value.Equals(default))
+                    {
+                        DrawSquare(x, y, Color.red, duration);
+                    } else
                     {
                         DrawSquare(x, y, Color.white, duration);
                     }
-                    debugTextArray[x, y] = CreateWorldText(x, y, canvas.transform, gridArray[x, y].ToString(), Color.white);
+                    debugTextArray[x, y] = CreateWorldText(x, y, canvas.transform, gridArray[x, y].ToString(), sizeText, Color.white);
                 }
             }
-            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, duration);
-            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, duration);
+            Debug.DrawLine(GetWorldPosition(0, Height), GetWorldPosition(Width, Height), Color.white, duration);
+            Debug.DrawLine(GetWorldPosition(Width, 0), GetWorldPosition(Width, Height), Color.white, duration);
         }
 
-        private void DrawSquare(int x, int y, Color color, float duration)
+        protected void DrawSquare(int x, int y, Color color, float duration)
         {
             float offset = 0.02f;
             // Duoi len tren
@@ -251,25 +289,24 @@ namespace Pathfinding
             Debug.DrawLine(GetWorldPosition(x + 1, y) - new Vector3(offset, 0, 0), GetWorldPosition(x + 1, y + 1) - new Vector3(offset, 0, 0), color, duration);
         }
 
-        private Text CreateWorldText(int x, int y, Transform parent, string value, Color color)
+        protected Text CreateWorldText(int x, int y, Transform parent, string value, int sizeText, Color color)
         {
             GameObject gameObject = new GameObject("x" + x + "y" + y);
             Transform transform = gameObject.transform;
             
             transform.SetParent(parent, false);
-            transform.localPosition = GetWorldPosition(x, y) + new Vector3(cellSize.x, cellSize.y) * .5f;
+            transform.localPosition = GetWorldPosition(x, y) + new Vector3(CellSize.x, CellSize.y) * .5f;
             transform.localScale = new Vector3(0.01f, 0.01f);
 
             Text text = gameObject.AddComponent<Text>();
             text.text = value;
             text.alignment = TextAnchor.MiddleCenter;
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 30;
+            text.fontSize = sizeText;
             text.color = color;
             
             return text;
         }
     }
-
 }
 
