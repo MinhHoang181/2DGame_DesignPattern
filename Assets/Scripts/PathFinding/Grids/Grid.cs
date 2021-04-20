@@ -78,7 +78,7 @@ namespace Pathfinding
 
         public Vector3 GetWorldPosition(int x, int y)
         {
-            return new Vector3(x * CellSize.x, y * CellSize.y) + originPosition;
+            return new Vector3(x * CellSize.x, y * CellSize.y);
         }
 
         /// <summary>
@@ -92,6 +92,26 @@ namespace Pathfinding
             if (x >= 0 && y >= 0 && x < Width && y < Height)
             {
                 gridArray[x, y] = value;
+                TriggerGridObjectChanged(x, y);
+                if (debugTextArray[x, y] != default)
+                {
+                    debugTextArray[x, y].text = gridArray[x, y].ToString();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Dat gia tri tai vi tri [x, y] trong grid
+        /// </summary>
+        /// <param name="x">toa do x trong grid</param>
+        /// <param name="y">toa do y trong grid</param>
+        /// <param name="value">gia tri tai vi tri [x, y]</param>
+        public virtual void SetGridObject<T>(int x, int y, T value) where T: unmanaged
+        {
+            if (x >= 0 && y >= 0 && x < Width && y < Height)
+            {
+                GridObject gridObject = (GridObject)(object)value;
+                gridArray[x, y] = gridObject;
                 TriggerGridObjectChanged(x, y);
                 if (debugTextArray[x, y] != default)
                 {
@@ -167,7 +187,7 @@ namespace Pathfinding
         /// </summary>
         /// <param name="tilemap">tilemap dung de quet</param>
         /// <param name="value">gia tri cua tilebase tren gridmap</param>
-        public virtual void ScanTilemap(Tilemap tilemap, GridObject value)
+        public void ScanTilemap(Tilemap tilemap, GridObject value)
         {
             BoundsInt bounds = tilemap.cellBounds;
             TileBase[] tileArray = tilemap.GetTilesBlock(bounds);
@@ -183,63 +203,6 @@ namespace Pathfinding
                     }
                 }
             }
-        }
-
-        public IEnumerable GetNeighbors(int x, int y, DirectionType directionType)
-        {
-            int dirX, dirY;
-            switch (directionType)
-            {
-                case DirectionType.EIGHT_DIRECTIONS:
-                    for (dirX = -1; dirX <= 1; dirX++)
-                    {
-                        for (dirY = -1; dirY <= 1; dirY++)
-                        {
-                            var neighbor = GetNeighbor(x, y, dirX, dirY);
-                            if (!neighbor.Equals(default))
-                            {
-                                yield return neighbor;
-                            }
-                        }
-                    }
-                    break;
-                case DirectionType.FOUR_DIRECTIONS:
-                default:
-                    dirY = 0;
-                    for (dirX = -1; dirX <= 1; dirX++)
-                    {
-                        var neighbor = GetNeighbor(x, y, dirX, dirY);
-                        if (!neighbor.Equals(default))
-                        {
-                            yield return neighbor;
-                        }
-                    }
-                    dirX = 0;
-                    for (dirY = -1; dirY <= 1; y++)
-                    {
-                        var neighbor = GetNeighbor(x, y, dirX, dirY);
-                        if (!neighbor.Equals(default))
-                        {
-                            yield return neighbor;
-                        }
-                    }
-                    break;
-            }
-        }
-
-        protected GridObject GetNeighbor(int x, int y, int dirX, int dirY)
-        {
-            if (x == 0 && y == 0)
-            {
-                return default;
-            }
-            int checkX = x + dirX;
-            int checkY = y + dirY;
-            if (checkX >= 0 && checkX < Width && checkY >= 0 && checkY < Height)
-            {
-                return gridArray[checkX, checkY];
-            }
-            return default;
         }
 
         /// <summary>
@@ -272,21 +235,21 @@ namespace Pathfinding
                     debugTextArray[x, y] = CreateWorldText(x, y, canvas.transform, gridArray[x, y].ToString(), sizeText, Color.white);
                 }
             }
-            Debug.DrawLine(GetWorldPosition(0, Height), GetWorldPosition(Width, Height), Color.white, duration);
-            Debug.DrawLine(GetWorldPosition(Width, 0), GetWorldPosition(Width, Height), Color.white, duration);
+            Debug.DrawLine(GetWorldPosition(0, Height) + originPosition, GetWorldPosition(Width, Height) + originPosition, Color.white, duration);
+            Debug.DrawLine(GetWorldPosition(Width, 0) + originPosition, GetWorldPosition(Width, Height) + originPosition, Color.white, duration);
         }
 
         protected void DrawSquare(int x, int y, Color color, float duration)
         {
             float offset = 0.02f;
             // Duoi len tren
-            Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), color, duration);
+            Debug.DrawLine(GetWorldPosition(x, y) + originPosition, GetWorldPosition(x, y + 1) + originPosition, color, duration);
             // Trai sang phai
-            Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), color, duration);
+            Debug.DrawLine(GetWorldPosition(x, y) + originPosition, GetWorldPosition(x + 1, y) + originPosition, color, duration);
             // Tren sang phai
-            Debug.DrawLine(GetWorldPosition(x, y + 1) - new Vector3(0, offset, 0), GetWorldPosition(x + 1, y + 1) - new Vector3(0, offset, 0), color, duration);
+            Debug.DrawLine(GetWorldPosition(x, y + 1) - new Vector3(0, offset, 0) + originPosition, GetWorldPosition(x + 1, y + 1) - new Vector3(0, offset, 0) + originPosition, color, duration);
             // Phai len tren
-            Debug.DrawLine(GetWorldPosition(x + 1, y) - new Vector3(offset, 0, 0), GetWorldPosition(x + 1, y + 1) - new Vector3(offset, 0, 0), color, duration);
+            Debug.DrawLine(GetWorldPosition(x + 1, y) - new Vector3(offset, 0, 0) + originPosition, GetWorldPosition(x + 1, y + 1) - new Vector3(offset, 0, 0) + originPosition, color, duration);
         }
 
         protected Text CreateWorldText(int x, int y, Transform parent, string value, int sizeText, Color color)
@@ -295,7 +258,7 @@ namespace Pathfinding
             Transform transform = gameObject.transform;
             
             transform.SetParent(parent, false);
-            transform.localPosition = GetWorldPosition(x, y) + new Vector3(CellSize.x, CellSize.y) * .5f;
+            transform.localPosition = GetWorldPosition(x, y) + originPosition + new Vector3(CellSize.x, CellSize.y) * .5f;
             transform.localScale = new Vector3(0.01f, 0.01f);
 
             Text text = gameObject.AddComponent<Text>();
