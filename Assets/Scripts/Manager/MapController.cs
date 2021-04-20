@@ -23,15 +23,18 @@ public class MapController : MonoBehaviour
     }
     #endregion
 
+    public GridPathNode Grid { get; private set; }
+
     [SerializeField] Transform startPoint;
     [SerializeField] Transform endPoint;
 
-    [SerializeField] Tilemap ground;
-    [SerializeField] Tilemap blockTile;
+    [SerializeField] Tilemap groundTilemap;
+    [SerializeField] Tilemap blockTilemap;
+
+    [SerializeField] bool debug = false;
 
     private int width;
     private int height;
-    private GridPathNode grid;
 
     // Start is called before the first frame update
     void Start()
@@ -39,12 +42,15 @@ public class MapController : MonoBehaviour
         width = Mathf.FloorToInt(Mathf.Abs(endPoint.position.x - startPoint.position.x));
         height = Mathf.FloorToInt(Mathf.Abs(endPoint.position.y - startPoint.position.y));
 
-        grid = new GridPathNode(width, height, GetComponent<Grid>().cellSize, transform.position);
+        Grid = new GridPathNode(width, height, GetComponent<Grid>().cellSize, transform.position);
 
-        grid.ScanTilemap(ground, new PathNode(value: 1, isWalkable: true));
-        grid.ScanTilemap(blockTile, new PathNode(value: 10, isWalkable: false));
+        Grid.ScanTilemap(groundTilemap, new PathNode(value: 1, isWalkable: true));
+        Grid.ScanTilemap(blockTilemap, new PathNode(value: 10, isWalkable: false));
 
-        grid.DebugGrid(sizeText: 20);
+        if (debug)
+        {
+            Grid.DebugGrid(sizeText: 20);
+        }
     }
 
     // Update is called once per frame

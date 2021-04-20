@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,6 +54,14 @@ namespace Pathfinding
             IsWalkable = iswalkable;
         }
 
+        public PathNode(PathNode pathNode)
+        {
+            X = pathNode.X;
+            Y = pathNode.Y;
+            Value = pathNode.Value;
+            IsWalkable = pathNode.IsWalkable;
+        }
+
         public void Update(int x, int y)
         {
             X = x;
@@ -73,9 +82,23 @@ namespace Pathfinding
             IsWalkable = isWalkable;
         }
 
+        public void Update(PathNode pathNode)
+        {
+            X = pathNode.X;
+            Y = pathNode.Y;
+            Value = pathNode.Value;
+            IsWalkable = pathNode.IsWalkable;
+        }
+
+        internal void Update(bool isWalkable)
+        {
+            IsWalkable = isWalkable;
+        }
+
         public override string ToString()
         {
-            return $"{Value}\n" +
+            return $"[{X}, {Y}]\n" +
+                   $"{Value}\n" +
                    $"{IsWalkable}";
         }
 
@@ -87,8 +110,8 @@ namespace Pathfinding
         /// <returns>tra ve khoang cach hCost</returns>
         public static int GetDistance(PathNode nodeA, PathNode nodeB)
         {
-            int dstX = System.Math.Abs(nodeA.X - nodeB.X);
-            int dstY = System.Math.Abs(nodeA.Y - nodeB.Y);
+            int dstX = Math.Abs(nodeA.X - nodeB.X);
+            int dstY = Math.Abs(nodeA.Y - nodeB.Y);
             return (dstX > dstY) ?
                 14 * dstY + 10 * (dstX - dstY) :
                 14 * dstX + 10 * (dstY - dstX);
@@ -101,8 +124,8 @@ namespace Pathfinding
         /// <returns>tra ve khoang cach hCost</returns>
         public int GetDistance(PathNode target)
         {
-            int dstX = System.Math.Abs(target.X - X);
-            int dstY = System.Math.Abs(target.Y - Y);
+            int dstX = Math.Abs(target.X - X);
+            int dstY = Math.Abs(target.Y - Y);
             return (dstX > dstY) ?
                 14 * dstY + 10 * (dstX - dstY) :
                 14 * dstX + 10 * (dstY - dstX);

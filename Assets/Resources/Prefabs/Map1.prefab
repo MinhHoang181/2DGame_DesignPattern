@@ -401,8 +401,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPoint: {fileID: 7358946083738409017}
   endPoint: {fileID: 7634907693262770703}
-  ground: {fileID: 76996727823545453}
-  blockTile: {fileID: 1758671535}
+  groundTilemap: {fileID: 76996727823545453}
+  blockTilemap: {fileID: 1758671535}
 --- !u!1 &5678271541434695810
 GameObject:
   m_ObjectHideFlags: 0
