@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace DesignPattern.Factory
@@ -13,6 +14,7 @@ namespace DesignPattern.Factory
             set
             {
                 currentHealth = Mathf.Max(0, value);
+                healthText.text = CurrentHealth + "/" + Health;
                 if (currentHealth.Equals(0))
                 {
                     // Chet
@@ -30,13 +32,19 @@ namespace DesignPattern.Factory
         [SerializeField] float timeToAttack;
         [SerializeField] float timeStun;
 
+        [Header("UI")]
+        [SerializeField] TextMeshPro healthText;
+
         private bool isAttack = false;
         private bool isTakeDamage = false;
 
         protected Player player;
-        protected Rigidbody2D rigBody;
-
+        private Rigidbody2D rigBody;
         protected Coroutine stunCoroutine;
+
+        #region PATHFINDING VALUES
+
+        #endregion
 
         private void Awake()
         {
@@ -47,44 +55,24 @@ namespace DesignPattern.Factory
         void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-            rigBody = gameObject.GetComponent<Rigidbody2D>();
+            rigBody = GetComponent<Rigidbody2D>();
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
-            Action();
+            Move();
         }
 
         public virtual void Action()
         {
-            if (isTakeDamage) return;
-
-            if (Vector3.Distance(transform.position, player.transform.position) > 1f)
-            {
-                Move();
-                return;
-            }
-
-            if (!isAttack)
-            {
-                StartCoroutine(StartAttack());
-            }
+            
         }
 
         public void Setting()
         {
             CurrentHealth = Health;
-        }
 
-        public virtual void Move()
-        {
-            // huong mat ve phia nguoi choi
-            transform.LookAt(player.transform.position);
-            transform.Rotate(new Vector3(0, -90, 0), Space.Self);
-
-            // di chuyen toi phia truoc
-            transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0));
+            healthText.text = CurrentHealth + "/" + Health;    
         }
 
         private IEnumerator StartAttack()
@@ -97,15 +85,14 @@ namespace DesignPattern.Factory
 
         public void Attack()
         {
-            //Debug.Log(transform.name + " attack player");
-            player.TakeDamage(damage, 0, Direction.DOWN);
+            player.TakeDamage(damage, 0, Vector2.zero);
         }
 
-        public void TakeDamage(int damage,float knockBackStrength ,Direction directionTakeDamage)
+        public void TakeDamage(int damage,float knockBackStrength , Vector2 direction)
         {
             CurrentHealth -= damage;
 
-            KnockBack(knockBackStrength ,directionTakeDamage);
+            KnockBack(knockBackStrength, direction);
 
             if (stunCoroutine != null)
             {
@@ -114,32 +101,13 @@ namespace DesignPattern.Factory
             stunCoroutine = StartCoroutine(OnStunned(timeStun));
         }
 
+        public void KnockBack(float forceStrength, Vector2 direction)
+        {
+        }
+
         public void Die()
         {
             Destroy(gameObject);
-        }
-
-        public void KnockBack(float forceStrength ,Direction directionTakeDamage)
-        {
-            Vector2 direction = Vector2.zero;
-            switch (directionTakeDamage)
-            {
-                case Direction.RIGHT:
-                    direction.x = forceStrength;
-                    break;
-                case Direction.LEFT:
-                    direction.x = -forceStrength;
-                    break;
-                case Direction.UP:
-                    direction.y = forceStrength;
-                    break;
-                case Direction.DOWN:
-                    direction.y = -forceStrength;
-                    break;
-                default:
-                    break;
-            }
-            rigBody.AddForce(direction);
         }
 
         IEnumerator OnStunned(float second)
@@ -148,5 +116,13 @@ namespace DesignPattern.Factory
             yield return new WaitForSeconds(second);
             isTakeDamage = false;
         }
+
+        #region PATHFINDING
+
+        public void Move()
+        {
+        }
+
+        #endregion 
     }
 }

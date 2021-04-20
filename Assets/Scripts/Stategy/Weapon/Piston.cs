@@ -14,7 +14,9 @@ namespace DesignPattern.Strategy
 
         [SerializeField] int damage = 1;
         [SerializeField] int knockBackStrength = 100;
-        [SerializeField] float distance = 10;
+        [SerializeField] float distance = 5;
+        [SerializeField] float fireDelay = 0.5f;
+        private float timeToFire = 0;
 
         private Player player;
         private Transform shootPoint;
@@ -26,41 +28,44 @@ namespace DesignPattern.Strategy
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         }
 
+        public void Update()
+        {
+            if (timeToFire > 0)
+            {
+                timeToFire -= Time.deltaTime;
+            }
+        }
+
         public void Shoot()
         {
-            LineRenderer line = Instantiate(Weapon).GetComponent<LineRenderer>();
-            line.SetPosition(0, shootPoint.position);
-            float x = shootPoint.position.x;
-            float y = shootPoint.position.y;
-            switch (player.Facing)
+            if (timeToFire <= 0)
             {
-                case Direction.RIGHT:
-                    x += distance;
-                    break;
-                case Direction.LEFT:
-                    x -= distance;
-                    break;
-                case Direction.UP:
-                    y += distance;
-                    break;
-                case Direction.DOWN:
-                    y -= distance;
-                    break;
-                default:
-                    break;
+                timeToFire = fireDelay;
+                StartShoot();
             }
-            Vector3 target = new Vector3(x, y, 0);
-            line.SetPosition(1, target);
+        }
 
-            RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, target);
+        private void StartShoot()
+        {
+            LineRenderer line = Instantiate(Weapon).GetComponent<LineRenderer>();
+
+            Vector2 direction = (shootPoint.position - player.transform.position).normalized;
+
+            Vector3 endLine = shootPoint.position + new Vector3(direction.x, direction.y, 0) * distance;
+
+            RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, direction, distance);
             if (hit)
             {
                 Character character = hit.collider.GetComponent<Character>();
                 if (character != null)
                 {
-                    character.TakeDamage(damage, KnockBackStrength, player.Facing);
+                    character.TakeDamage(damage, KnockBackStrength, direction);
                 }
+                endLine = hit.point;
             }
+
+            line.SetPosition(0, shootPoint.position);
+            line.SetPosition(1, endLine);
         }
     }
 }

@@ -25,7 +25,6 @@ namespace DesignPattern.Factory
             }
         }
         public float Speed { get { return speed; } set { speed = value; } }
-        public Direction Facing { get { return facing; } set { facing = value; } }
 
         [Header("Stats")]
         [SerializeField] int health;
@@ -36,7 +35,7 @@ namespace DesignPattern.Factory
         [SerializeField] TextMeshPro healthText;
 
         private WeaponController weapon;
-        private Direction facing = Direction.RIGHT;
+        private Transform spriteObject;
 
         public void Awake()
         {
@@ -53,13 +52,15 @@ namespace DesignPattern.Factory
             Setting();
 
             weapon = transform.GetComponent<WeaponController>();
+            spriteObject = transform.Find("Sprite");
         }
 
         public void Update()
         {
+            FacingToMouse();
             Move();
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
             {
                 btnAttack.Execute();
             }
@@ -107,7 +108,7 @@ namespace DesignPattern.Factory
             weapon.Weapon(WeaponType.Bullet);
         }
 
-        public void TakeDamage(int damage, float knockBackStrength, Direction directionTakeDamage)
+        public void TakeDamage(int damage, float knockBackStrength, Vector2 direction)
         {
             // bi danh/trung dan
             CurrentHealth -= damage;
@@ -116,6 +117,19 @@ namespace DesignPattern.Factory
         public void Die()
         {
             Debug.Log("Game over");
+        }
+
+        private void FacingToMouse()
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+            Vector2 direction = new Vector2(
+                mousePosition.x - transform.position.x,
+                mousePosition.y - transform.position.y
+            );
+
+            spriteObject.right = direction;
         }
     }
 }
