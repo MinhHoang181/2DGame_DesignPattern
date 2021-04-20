@@ -6,9 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] string defaultMap;
     public void PlayGame()
     {
-        SceneManager.LoadScene("TuScene");
+        SceneManager.LoadScene(defaultMap);
     }
     public void QuitGame()
     {
