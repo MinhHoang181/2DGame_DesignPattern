@@ -23,7 +23,9 @@ namespace DesignPattern
         }
         #endregion
 
- 
+        public bool Debug { get { return debug; } }
+
+        [SerializeField] bool debug;
 
         // Start is called before the first frame update
         void Start()
