@@ -10,11 +10,12 @@ namespace DesignPattern.Factory
         float Speed { get; set; }
 
         public void Move();
-        public void Attack();
+
+        public void Attack(Vector3 direction);
 
         public void Setting();
 
-        public void TakeDamage(int damage, float knockBackStrength, Vector2 direction);
+        public void TakeDamage(int damage, float pushBackStrength, Vector2 direction);
 
         public void Die();
     }

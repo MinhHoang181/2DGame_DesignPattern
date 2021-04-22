@@ -7,8 +7,9 @@ namespace DesignPattern.Commands
 {
     public class PlayerAttack : Command
     {
-        private protected Player player;
+        public Player player;
 
+        public PlayerAttack() { }
         public PlayerAttack(Player player)
         {
             this.player = player;
@@ -19,10 +20,9 @@ namespace DesignPattern.Commands
             Attack();
         }
 
-        public void Attack()
+        private void Attack()
         {
             player.Attack();
-
         }
     }
 }

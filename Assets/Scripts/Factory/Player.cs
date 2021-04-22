@@ -30,21 +30,22 @@ namespace DesignPattern.Factory
         [SerializeField] int health;
         private int currentHealth;
         [SerializeField] float speed;
+        [SerializeField] float timeStun;
 
         [Header("UI")]
         [SerializeField] TextMeshPro healthText;
 
         private WeaponController weapon;
         private Transform spriteObject;
+        private Rigidbody2D rigBody;
+
+        private bool isTakeDamage = false;
+
+        private Coroutine stunCoroutine;
 
         public void Awake()
         {
-            btnUp = new MoveForward(this);
-            btnLeft = new MoveLeft(this);
-            btnDown = new MoveBack(this);
-            btnRight = new MoveRight(this);
-            btnAttack = new PlayerAttack(this);
-            btnChangeWeapon = new PlayerChangeWeapon(this);
+            
         }
 
         public void Start()
@@ -53,21 +54,13 @@ namespace DesignPattern.Factory
 
             weapon = transform.GetComponent<WeaponController>();
             spriteObject = transform.Find("Sprite");
+            rigBody = transform.GetComponent<Rigidbody2D>();
         }
 
         public void Update()
         {
             FacingToMouse();
             Move();
-
-            if (Input.GetKey(KeyCode.Space))
-            {
-                btnAttack.Execute();
-            }
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                btnChangeWeapon.Execute();
-            }
         }
 
         public void Setting()
@@ -76,28 +69,23 @@ namespace DesignPattern.Factory
             healthText.text = CurrentHealth + "/" + Health;
         }
 
-        public void Move()
+        public void Action()
         {
-            
-            if (Input.GetKey(KeyCode.W))
-            {
-                btnUp.Execute();
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {  //horizon, verticle
-                btnLeft.Execute();
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                btnDown.Execute();
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                btnRight.Execute();
-            }
+            if (isTakeDamage) return;
+            FacingToMouse();
+            Move();
         }
 
-        public void Attack() // 
+        public void Move()
+        {
+        }
+
+        public void Attack()
+        {
+            Attack(Vector3.zero);
+        }
+
+        public void Attack(Vector3 direction) // 
         {
             //Debug.Log("Ban");
             weapon.Fire();
@@ -108,10 +96,31 @@ namespace DesignPattern.Factory
             weapon.Weapon(WeaponType.Bullet);
         }
 
-        public void TakeDamage(int damage, float knockBackStrength, Vector2 direction)
+        public void TakeDamage(int damage, float pushBackStrength, Vector2 direction)
         {
             // bi danh/trung dan
             CurrentHealth -= damage;
+
+            KnockBack(pushBackStrength, direction);
+            if (stunCoroutine != null)
+            {
+                StopCoroutine(stunCoroutine);
+            }
+            StartCoroutine(OnStunned(timeStun));
+        }
+
+        IEnumerator OnStunned(float second)
+        {
+            isTakeDamage = true;
+            yield return new WaitForSeconds(second);
+            isTakeDamage = false;
+        }
+
+        public void KnockBack(float pushBackStrength, Vector2 direction)
+        {
+            rigBody.velocity = Vector2.zero;
+            Vector2 force = direction * pushBackStrength * 50;
+            rigBody.AddForce(force);
         }
 
         public void Die()

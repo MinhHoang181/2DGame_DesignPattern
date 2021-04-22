@@ -1,0 +1,135 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using DesignPattern.Commands;
+using DesignPattern.Factory;
+
+namespace DesignPattern
+{
+    public class InputHander : MonoBehaviour
+    {
+        #region SINGELTON
+        private InputHander() { }
+        public static InputHander Instance { get; private set; }
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
+            DontDestroyOnLoad(gameObject);
+        }
+        #endregion
+
+        private MoveUp btnUp;
+        private MoveDown btnDown;
+        private MoveLeft btnLeft;
+        private MoveRight btnRight;
+        private PlayerAttack btnAttack;
+        private PlayerChangeWeapon btnChangeWeapon;
+
+        [Header("Move")]
+        [SerializeField] KeyCode up = KeyCode.W;
+        [SerializeField] KeyCode down = KeyCode.S;
+        [SerializeField] KeyCode left = KeyCode.A;
+        [SerializeField] KeyCode right = KeyCode.D;
+        [Header("Weapon")]
+        [SerializeField] KeyCode attack = KeyCode.Mouse0;
+        [SerializeField] KeyCode changeLeft = KeyCode.Q;
+        [SerializeField] KeyCode changeRight = KeyCode.E;
+        [SerializeField] KeyCode reload = KeyCode.R;
+        [Header("Setting")]
+        [SerializeField] KeyCode pause = KeyCode.Escape;
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            btnUp = new MoveUp();
+            btnLeft = new MoveLeft();
+            btnDown = new MoveDown();
+            btnRight = new MoveRight();
+            btnAttack = new PlayerAttack();
+            btnChangeWeapon = new PlayerChangeWeapon();
+
+            GameController.Instance.playerChangedEvent += UpdateButton;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (!GameController.Instance.IsPause)
+            {
+                PlayerControl();
+            }
+
+            if (Input.GetKeyDown(pause))
+            {
+                GameController.Instance.ChangeState();
+            }
+
+            if (GameController.Instance.IsPause)
+            {
+                SettingControl();
+            }
+        }
+
+        private void UpdateButton(Player player)
+        {
+            btnUp.player = player;
+            btnDown.player = player;
+            btnLeft.player = player;
+            btnRight.player = player;
+            btnAttack.player = player;
+            btnChangeWeapon.player = player;
+        }
+
+        private void PlayerControl()
+        {
+            // MOVE
+            if (Input.GetKey(up))
+            {
+                btnUp.Execute();
+            }
+            if (Input.GetKey(down))
+            {
+                btnDown.Execute();
+            }
+            if (Input.GetKey(left))
+            {
+                btnLeft.Execute();
+            }
+            if (Input.GetKey(right))
+            {
+                btnRight.Execute();
+            }
+
+            // ATTACK
+            if (Input.GetKey(attack))
+            {
+                btnAttack.Execute();
+            }
+            if (Input.GetKeyDown(reload))
+            {
+                Debug.Log("reload");
+            }
+            if (Input.GetKeyDown(changeLeft))
+            {
+                Debug.Log("Change to weapon on left");
+            }
+            if (Input.GetKeyDown(changeRight))
+            {
+                Debug.Log("Change to weapon in right");
+            }
+        }
+
+        private void SettingControl()
+        {
+
+        }
+    }
+}

@@ -247,17 +247,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1253356904306345080, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
-      propertyPath: speed
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 1253356904306345083, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
       propertyPath: m_Name
       value: Zombie
-      objectReference: {fileID: 0}
-    - target: {fileID: 7825446156204804896, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
-      propertyPath: m_AngularDrag
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
@@ -274,14 +266,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
       propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5616027315616532646, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
@@ -324,10 +308,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7284382093048474724, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
-      propertyPath: m_AngularDrag
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a37f5ce6244b14d38be63bda9f517c3e, type: 3}
 --- !u!1 &2083525028
@@ -340,7 +320,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2083525031}
   - component: {fileID: 2083525030}
-  - component: {fileID: 2083525029}
   - component: {fileID: 2083525032}
   m_Layer: 0
   m_Name: Main Camera
@@ -349,14 +328,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &2083525029
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2083525028}
-  m_Enabled: 1
 --- !u!20 &2083525030
 Camera:
   m_ObjectHideFlags: 0
@@ -408,7 +379,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2083525028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 6, y: 4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -433,6 +404,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 795900718, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
+      propertyPath: up
+      value: 119
+      objectReference: {fileID: 0}
     - target: {fileID: 139818014253087808, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
       propertyPath: m_Name
       value: GameController
@@ -479,18 +454,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 139818014253087811, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5827843946352847750, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
-      propertyPath: map
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5827843946352847750, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
-      propertyPath: grid
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5827843946352847750, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
-      propertyPath: debug
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

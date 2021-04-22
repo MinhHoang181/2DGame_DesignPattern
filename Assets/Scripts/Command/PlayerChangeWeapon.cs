@@ -8,8 +8,9 @@ using DesignPattern.Factory;
 
     public class PlayerChangeWeapon : Command
     {
-        private protected Player player;
+        public Player player;
 
+        public PlayerChangeWeapon() { }
         public PlayerChangeWeapon(Player player)
         {
             this.player = player;
@@ -20,12 +21,9 @@ using DesignPattern.Factory;
             ChangeWeapon();
         }
 
-        public void ChangeWeapon()
+        private void ChangeWeapon()
         {
             player.ChangeWeapon();
-
         }
-
-
     }
 }

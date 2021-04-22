@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using DesignPattern.Factory;
 
 namespace DesignPattern
 {
@@ -23,21 +25,48 @@ namespace DesignPattern
         }
         #endregion
 
-        public bool Debug { get { return debug; } }
+        #region DELEGATES
+        public Action<Player> playerChangedEvent;
+        public Action<bool> gameStateChangedEvent;
+        #endregion
 
+        public bool Debug { get { return debug; } }
         [SerializeField] bool debug;
 
+        public Player Player { get { return player; } }
+        private Player player;
+        public bool IsPause { get { return isPause; } }
+        private bool isPause;
         // Start is called before the first frame update
         void Start()
         {
-           
+            
         }
 
         // Update is called once per frame
         void Update()
         {
-
+            if (player == null)
+            {
+                player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                if (player)
+                {
+                    playerChangedEvent(player);
+                }
+            }
         }
+
+        public void ChangeState()
+        {
+            if (isPause)
+            {
+                isPause = false;
+            } else
+            {
+                isPause = true;
+            }
+            gameStateChangedEvent(isPause);
+        } 
     }
 }
 

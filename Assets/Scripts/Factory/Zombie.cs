@@ -30,7 +30,8 @@ namespace DesignPattern.Factory
         protected int currentHealth;
         [SerializeField] protected float speed;
         [SerializeField] protected int damage;
-        [SerializeField] protected float timeToAttack;
+        [SerializeField] protected float attackSpeed;
+        [SerializeField] protected int pushBackStrength;
         [SerializeField] protected float timeStun;
 
         [Header("UI")]
@@ -42,7 +43,10 @@ namespace DesignPattern.Factory
         protected Player player;
         protected Vector3 playerPosition;
         protected Rigidbody2D rigBody;
+        protected Transform sprite;
+
         protected Coroutine stunCoroutine;
+        protected Coroutine attackCoroutine;
 
         #region PATHFINDING VALUES
         protected List<PathNode> pathNodes = new List<PathNode>();
@@ -57,8 +61,10 @@ namespace DesignPattern.Factory
         protected void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-            playerPosition = player.transform.position;
-            rigBody = GetComponent<Rigidbody2D>();
+            playerPosition = transform.position;
+            rigBody = transform.GetComponent<Rigidbody2D>();
+            sprite = transform.Find("Sprite").transform;
+
             InvokeRepeating(nameof(SearchPlayer), 0f, 1f);
         }
 
@@ -74,6 +80,8 @@ namespace DesignPattern.Factory
 
         protected virtual void Action()
         {
+            if (isTakeDamage) return;
+            if (isAttack) return;
             Move();
         }
 
@@ -84,24 +92,24 @@ namespace DesignPattern.Factory
             healthText.text = CurrentHealth + "/" + Health;    
         }
 
-        protected IEnumerator StartAttack()
+        protected IEnumerator StartAttack(Vector3 direction)
         {
             isAttack = true;
-            yield return new WaitForSeconds(timeToAttack);
-            Attack();
+            yield return new WaitForSeconds(attackSpeed);
+            Attack(direction);
             isAttack = false;
         }
 
-        public void Attack()
+        public void Attack(Vector3 direction)
         {
-            player.TakeDamage(damage, 0, Vector2.zero);
+            player.TakeDamage(damage, pushBackStrength, direction);
         }
 
-        public void TakeDamage(int damage,float knockBackStrength , Vector2 direction)
+        public void TakeDamage(int damage,float pushBackStrength , Vector2 direction)
         {
             CurrentHealth -= damage;
 
-            KnockBack(knockBackStrength, direction);
+            KnockBack(pushBackStrength, direction);
 
             if (stunCoroutine != null)
             {
@@ -110,8 +118,11 @@ namespace DesignPattern.Factory
             stunCoroutine = StartCoroutine(OnStunned(timeStun));
         }
 
-        public void KnockBack(float forceStrength, Vector2 direction)
+        public void KnockBack(float pushBackStrength, Vector2 direction)
         {
+            rigBody.velocity = Vector2.zero;
+            Vector2 force = direction * pushBackStrength * 50;
+            rigBody.AddForce(force);
         }
 
         public void Die()
@@ -149,6 +160,7 @@ namespace DesignPattern.Factory
                     Vector3 moveDir = (targetPosition - transform.position).normalized;
                     Vector2 force = moveDir * speed * Time.deltaTime;
                     rigBody.velocity += force;
+                    sprite.right = moveDir;
                 } else
                 {
                     pathNodes.RemoveAt(0);
@@ -176,5 +188,17 @@ namespace DesignPattern.Factory
             }
         }
         #endregion
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.transform.tag.Equals("Player"))
+            {
+                rigBody.velocity = Vector2.zero;
+                pathNodes.Clear();
+
+                Vector3 direction = (player.transform.position - transform.position).normalized;
+                StartCoroutine(StartAttack(direction));
+            }
+        }
     }
 }

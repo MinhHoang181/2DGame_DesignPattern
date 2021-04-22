@@ -8,12 +8,12 @@ namespace DesignPattern.Strategy
     public class Piston : MonoBehaviour, IWeapon
     {
         public int Damage { get { return damage; } set { damage = value; } }
-        public int KnockBackStrength { get { return knockBackStrength; } set { knockBackStrength = value; } }
+        public int PushBackStrength { get { return pushBackStrength; } set { pushBackStrength = value; } }
         public Transform ShootPoint { get { return shootPoint; } set { shootPoint = value; } }
         public GameObject Weapon { get { return weapon; } }
 
         [SerializeField] int damage = 1;
-        [SerializeField] int knockBackStrength = 100;
+        [SerializeField] int pushBackStrength = 1;
         [SerializeField] float distance = 5;
         [SerializeField] float fireDelay = 0.5f;
         private float timeToFire = 0;
@@ -59,7 +59,7 @@ namespace DesignPattern.Strategy
                 Character character = hit.collider.GetComponent<Character>();
                 if (character != null)
                 {
-                    character.TakeDamage(damage, KnockBackStrength, direction);
+                    character.TakeDamage(damage, PushBackStrength, direction);
                 }
                 endLine = hit.point;
             }
