@@ -66,7 +66,7 @@ namespace DesignPattern.Factory
         {
             Action();
 
-            if (pathNodes.Count > 0)
+            if (pathNodes.Count > 0 && GameController.Instance.Debug)
             {
                 DrawWayToTarget();
             }
