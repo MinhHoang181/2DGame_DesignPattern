@@ -26,12 +26,7 @@ namespace DesignPattern
         }
         #endregion
 
-        private MoveUp btnUp;
-        private MoveDown btnDown;
-        private MoveLeft btnLeft;
-        private MoveRight btnRight;
-        private PlayerAttack btnAttack;
-        private PlayerChangeWeapon btnChangeWeapon;
+        private PlayerCommand btnUp, btnDown, btnLeft, btnRight, btnAttack, btnChangeWeapon;
 
         [Header("Move")]
         [SerializeField] KeyCode up = KeyCode.W;

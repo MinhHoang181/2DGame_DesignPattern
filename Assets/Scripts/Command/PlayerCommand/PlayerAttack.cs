@@ -5,10 +5,8 @@ using DesignPattern.Factory;
 
 namespace DesignPattern.Commands
 {
-    public class PlayerAttack : Command
+    public class PlayerAttack : PlayerCommand
     {
-        public Player player;
-
         public PlayerAttack() { }
         public PlayerAttack(Player player)
         {

@@ -18,14 +18,12 @@ namespace DesignPattern.Strategy
         [SerializeField] float fireDelay = 0.5f;
         private float timeToFire = 0;
 
-        private Player player;
         private Transform shootPoint;
         private GameObject weapon;
 
         public void Start()
         {
             weapon = (GameObject)Resources.Load("Prefabs/Bullet Line", typeof(GameObject));
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         }
 
         public void Update()
@@ -36,20 +34,20 @@ namespace DesignPattern.Strategy
             }
         }
 
-        public void Shoot()
+        public void Shoot(Vector2 direction)
         {
             if (timeToFire <= 0)
             {
                 timeToFire = fireDelay;
-                StartShoot();
+                StartShoot(direction);
             }
         }
 
-        private void StartShoot()
+        private void StartShoot(Vector2 direction)
         {
             LineRenderer line = Instantiate(Weapon).GetComponent<LineRenderer>();
 
-            Vector2 direction = (shootPoint.position - player.transform.position).normalized;
+            //Vector2 direction = (shootPoint.position - player.transform.position).normalized;
 
             Vector3 endLine = shootPoint.position + new Vector3(direction.x, direction.y, 0) * distance;
 

@@ -17,24 +17,19 @@ namespace DesignPattern.Strategy
         [SerializeField] int pushBackStrength = 100;
 
         private GameObject weapon;
-        private Player player;
         private Transform shootPoint;
 
         public void Start()
         {
             weapon = (GameObject) Resources.Load("Prefabs/Bullet", typeof(GameObject));
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         }
 
-        public void Shoot()
+        public void Shoot(Vector2 direction)
         {
             GameObject bullet = Instantiate(Weapon);
             bullet.transform.position = shootPoint.position;
 
-            int x = 0;
-            int y = 0;
-
-            bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(x, y) * speed;
+            bullet.GetComponent<Rigidbody2D>().velocity = direction * speed * Time.deltaTime;
         }
     }
 }

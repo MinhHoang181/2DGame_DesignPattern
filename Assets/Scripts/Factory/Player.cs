@@ -9,7 +9,6 @@ namespace DesignPattern.Factory
 {
     public class Player : MonoBehaviour, Character
     {
-        Command btnUp, btnLeft, btnDown, btnRight, btnAttack, btnChangeWeapon;
         public int Health { get { return health; } set { health = value; } }
         public int CurrentHealth
         {
@@ -20,7 +19,7 @@ namespace DesignPattern.Factory
                 healthText.text = CurrentHealth + "/" + Health;
                 if (currentHealth.Equals(0))
                 {
-                    // Chet
+                    Die();
                 } 
             }
         }
@@ -40,13 +39,9 @@ namespace DesignPattern.Factory
         private Rigidbody2D rigBody;
 
         private bool isTakeDamage = false;
+        private Vector3 directionMove;
 
         private Coroutine stunCoroutine;
-
-        public void Awake()
-        {
-            
-        }
 
         public void Start()
         {
@@ -59,8 +54,7 @@ namespace DesignPattern.Factory
 
         public void Update()
         {
-            FacingToMouse();
-            Move();
+            Action();
         }
 
         public void Setting()
@@ -73,40 +67,40 @@ namespace DesignPattern.Factory
         {
             if (isTakeDamage) return;
             FacingToMouse();
-            Move();
         }
 
-        public void Move()
+        public void Move(Vector3 direction)
         {
+            if (isTakeDamage) return;
+
+            directionMove = (directionMove + direction).normalized;
+            //Debug.Log(directionMove);
+            transform.Translate(direction * Speed * Time.deltaTime);
         }
 
         public void Attack()
         {
-            Attack(Vector3.zero);
+            if (isTakeDamage) return;
+
+            Vector2 direction = (weapon.ShootPoint.position - transform.position).normalized;
+            weapon.Fire(direction);
         }
 
-        public void Attack(Vector3 direction) // 
-        {
-            //Debug.Log("Ban");
-            weapon.Fire();
-        }
-
-        public void ChangeWeapon() // Dinh nghia
+        public void ChangeWeapon()
         {
             weapon.Weapon(WeaponType.Bullet);
         }
 
         public void TakeDamage(int damage, float pushBackStrength, Vector2 direction)
         {
-            // bi danh/trung dan
             CurrentHealth -= damage;
 
-            KnockBack(pushBackStrength, direction);
+            PushBack(pushBackStrength, direction);
             if (stunCoroutine != null)
             {
                 StopCoroutine(stunCoroutine);
             }
-            StartCoroutine(OnStunned(timeStun));
+            stunCoroutine = StartCoroutine(OnStunned(timeStun));
         }
 
         IEnumerator OnStunned(float second)
@@ -116,7 +110,7 @@ namespace DesignPattern.Factory
             isTakeDamage = false;
         }
 
-        public void KnockBack(float pushBackStrength, Vector2 direction)
+        public void PushBack(float pushBackStrength, Vector2 direction)
         {
             rigBody.velocity = Vector2.zero;
             Vector2 force = direction * pushBackStrength * 50;
@@ -139,6 +133,17 @@ namespace DesignPattern.Factory
             );
 
             spriteObject.right = direction;
+        }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            if (collision.transform.tag.Equals("Zombie"))
+            {
+                if (isTakeDamage == false)
+                {
+                    rigBody.velocity = Vector2.zero;
+                }
+            }
         }
     }
 }

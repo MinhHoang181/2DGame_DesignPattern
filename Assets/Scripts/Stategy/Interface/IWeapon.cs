@@ -12,6 +12,6 @@ namespace DesignPattern.Strategy
         Transform ShootPoint { get; set; }
         GameObject Weapon { get; }
 
-        void Shoot();
+        void Shoot(Vector2 direction);
     }
 }

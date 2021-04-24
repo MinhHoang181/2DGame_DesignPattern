@@ -9,9 +9,9 @@ namespace DesignPattern.Factory
         int Health { get; set; }
         float Speed { get; set; }
 
-        public void Move();
+        public void Move(Vector3 direction);
 
-        public void Attack(Vector3 direction);
+        public void Attack();
 
         public void Setting();
 

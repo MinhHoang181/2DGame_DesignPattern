@@ -30,7 +30,7 @@ namespace DesignPattern.Factory
         protected int currentHealth;
         [SerializeField] protected float speed;
         [SerializeField] protected int damage;
-        [SerializeField] protected float attackSpeed;
+        [SerializeField] protected float timeToAttack;
         [SerializeField] protected int pushBackStrength;
         [SerializeField] protected float timeStun;
 
@@ -44,6 +44,7 @@ namespace DesignPattern.Factory
         protected Vector3 playerPosition;
         protected Rigidbody2D rigBody;
         protected Transform sprite;
+        protected Transform attackPoint;
 
         protected Coroutine stunCoroutine;
         protected Coroutine attackCoroutine;
@@ -64,6 +65,7 @@ namespace DesignPattern.Factory
             playerPosition = transform.position;
             rigBody = transform.GetComponent<Rigidbody2D>();
             sprite = transform.Find("Sprite").transform;
+            attackPoint = sprite.Find("Attack Point").transform;
 
             InvokeRepeating(nameof(SearchPlayer), 0f, 1f);
         }
@@ -82,7 +84,14 @@ namespace DesignPattern.Factory
         {
             if (isTakeDamage) return;
             if (isAttack) return;
-            Move();
+            AIMove();
+        }
+
+        public void Move(Vector3 direction)
+        {
+            Vector2 force = direction * speed * Time.deltaTime;
+            rigBody.velocity += force;
+            sprite.right = direction;
         }
 
         public void Setting()
@@ -92,24 +101,33 @@ namespace DesignPattern.Factory
             healthText.text = CurrentHealth + "/" + Health;    
         }
 
-        protected IEnumerator StartAttack(Vector3 direction)
+        protected IEnumerator StartAttack()
         {
             isAttack = true;
-            yield return new WaitForSeconds(attackSpeed);
-            Attack(direction);
+            yield return new WaitForSeconds(timeToAttack);
+            Attack();
             isAttack = false;
         }
 
-        public void Attack(Vector3 direction)
+        public void Attack()
         {
-            player.TakeDamage(damage, pushBackStrength, direction);
+            Vector2 direction = (attackPoint.position - transform.position).normalized;
+            RaycastHit2D hit = Physics2D.Raycast(attackPoint.position, direction, 0.1f);
+            if (hit)
+            {
+                Player player = hit.collider.GetComponent<Player>();
+                if (player != null)
+                {
+                    player.TakeDamage(damage, pushBackStrength, direction);
+                }
+            }
         }
 
         public void TakeDamage(int damage,float pushBackStrength , Vector2 direction)
         {
             CurrentHealth -= damage;
 
-            KnockBack(pushBackStrength, direction);
+            PushBack(pushBackStrength, direction);
 
             if (stunCoroutine != null)
             {
@@ -118,7 +136,7 @@ namespace DesignPattern.Factory
             stunCoroutine = StartCoroutine(OnStunned(timeStun));
         }
 
-        public void KnockBack(float pushBackStrength, Vector2 direction)
+        public void PushBack(float pushBackStrength, Vector2 direction)
         {
             rigBody.velocity = Vector2.zero;
             Vector2 force = direction * pushBackStrength * 50;
@@ -148,7 +166,7 @@ namespace DesignPattern.Factory
             }
         }
 
-        public void Move()
+        private void AIMove()
         {
             if (pathNodes.Count > 0)
             {
@@ -157,10 +175,9 @@ namespace DesignPattern.Factory
                 Vector3 targetPosition = MapController.Instance.Grid.GetWorldPosition(currentNode.X, currentNode.Y);
                 if (Vector3.Distance(transform.position, targetPosition) > 0.5f)
                 {
-                    Vector3 moveDir = (targetPosition - transform.position).normalized;
-                    Vector2 force = moveDir * speed * Time.deltaTime;
-                    rigBody.velocity += force;
-                    sprite.right = moveDir;
+                    Vector3 direction = (targetPosition - transform.position).normalized;
+                    Move(direction);
+                    
                 } else
                 {
                     pathNodes.RemoveAt(0);
@@ -168,6 +185,19 @@ namespace DesignPattern.Factory
             }
         }
         #endregion
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            if (collision.transform.tag.Equals("Player"))
+            {
+                Vector2 direction = (collision.transform.position - transform.position).normalized;
+                sprite.right = direction;
+                if (isAttack == false)
+                {
+                    StartCoroutine(StartAttack());
+                }
+            }
+        }
 
         #region DEBUG
         // Debug 
@@ -188,17 +218,5 @@ namespace DesignPattern.Factory
             }
         }
         #endregion
-
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            if (collision.transform.tag.Equals("Player"))
-            {
-                rigBody.velocity = Vector2.zero;
-                pathNodes.Clear();
-
-                Vector3 direction = (player.transform.position - transform.position).normalized;
-                StartCoroutine(StartAttack(direction));
-            }
-        }
     }
 }

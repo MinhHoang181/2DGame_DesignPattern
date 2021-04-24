@@ -116,7 +116,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  speed: 1
+  speed: 3
+  timeStun: 1
   healthText: {fileID: 3929016028261201406}
 --- !u!114 &3142922074951999197
 MonoBehaviour:

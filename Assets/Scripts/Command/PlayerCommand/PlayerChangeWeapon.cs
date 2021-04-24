@@ -6,10 +6,8 @@ using DesignPattern.Factory;
     namespace DesignPattern.Commands
 {
 
-    public class PlayerChangeWeapon : Command
+    public class PlayerChangeWeapon : PlayerCommand
     {
-        public Player player;
-
         public PlayerChangeWeapon() { }
         public PlayerChangeWeapon(Player player)
         {

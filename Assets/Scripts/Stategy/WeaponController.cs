@@ -7,6 +7,8 @@ namespace DesignPattern.Strategy
 {
 	public class WeaponController : MonoBehaviour
 	{
+		public Transform ShootPoint { get { return shootPoint; } }
+
 		[SerializeField] Transform shootPoint;
 		[SerializeField] WeaponType weaponType;
 
@@ -24,9 +26,9 @@ namespace DesignPattern.Strategy
 
 		}
 
-		public void Fire()
+		public void Fire(Vector2 direction)
 		{
-			iWeapon.Shoot();
+			iWeapon.Shoot(direction);
 		}
 
 		//X? l? lo?i v? kh?
