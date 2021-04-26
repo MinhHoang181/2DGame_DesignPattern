@@ -7,10 +7,11 @@ namespace DesignPattern.Strategy
 {
     public interface IWeapon
     {
-        int Damage { get; set; }
-        int PushBackStrength { get; set; }
+        int Damage { get;}
         Transform ShootPoint { get; set; }
-        GameObject Weapon { get; }
+        LayerMask HitLayers { get; set; }
+
+        WeaponScriptableObject Weapon { get; set; }
 
         void Shoot(Vector2 direction);
     }

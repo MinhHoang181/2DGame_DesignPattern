@@ -16,7 +16,9 @@ namespace DesignPattern.Factory
             set
             {
                 currentHealth = Mathf.Max(0, value);
-                healthText.text = CurrentHealth + "/" + Health;
+
+                GameController.Instance.playerHealthChangedEvent();
+
                 if (currentHealth.Equals(0))
                 {
                     Die();
@@ -32,10 +34,11 @@ namespace DesignPattern.Factory
         [SerializeField] float timeStun;
 
         [Header("UI")]
-        [SerializeField] TextMeshPro healthText;
+        [SerializeField] public TextMeshPro healthText;
+        [SerializeField] public TextMeshPro weaponText;
+        [SerializeField] public SpriteRenderer sprite;
 
         private WeaponController weapon;
-        private Transform spriteObject;
         private Rigidbody2D rigBody;
 
         private bool isTakeDamage = false;
@@ -48,7 +51,6 @@ namespace DesignPattern.Factory
             Setting();
 
             weapon = transform.GetComponent<WeaponController>();
-            spriteObject = transform.Find("Sprite");
             rigBody = transform.GetComponent<Rigidbody2D>();
         }
 
@@ -60,7 +62,6 @@ namespace DesignPattern.Factory
         public void Setting()
         {
             CurrentHealth = Health;
-            healthText.text = CurrentHealth + "/" + Health;
         }
 
         public void Action()
@@ -88,7 +89,6 @@ namespace DesignPattern.Factory
 
         public void ChangeWeapon()
         {
-            weapon.Weapon(WeaponType.Bullet);
         }
 
         public void TakeDamage(int damage, float pushBackStrength, Vector2 direction)
@@ -132,7 +132,7 @@ namespace DesignPattern.Factory
                 mousePosition.y - transform.position.y
             );
 
-            spriteObject.right = direction;
+            sprite.transform.right = direction;
         }
 
         private void OnCollisionStay2D(Collision2D collision)

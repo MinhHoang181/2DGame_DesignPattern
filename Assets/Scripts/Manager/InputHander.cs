@@ -44,12 +44,12 @@ namespace DesignPattern
         // Start is called before the first frame update
         void Start()
         {
-            btnUp = new MoveUp();
-            btnLeft = new MoveLeft();
-            btnDown = new MoveDown();
-            btnRight = new MoveRight();
-            btnAttack = new PlayerAttack();
-            btnChangeWeapon = new PlayerChangeWeapon();
+            btnUp = new MoveUp(GameController.Instance.Player);
+            btnLeft = new MoveLeft(GameController.Instance.Player);
+            btnDown = new MoveDown(GameController.Instance.Player);
+            btnRight = new MoveRight(GameController.Instance.Player);
+            btnAttack = new PlayerAttack(GameController.Instance.Player);
+            btnChangeWeapon = new PlayerChangeWeapon(GameController.Instance.Player);
 
             GameController.Instance.playerChangedEvent += UpdateButton;
         }

@@ -28,7 +28,9 @@ namespace DesignPattern
 
         #region DELEGATES
         public Action<Player> playerChangedEvent;
+        public Action playerHealthChangedEvent;
         public Action<bool> gameStateChangedEvent;
+        public Action<WeaponScriptableObject> weaponChangedEvent;
         #endregion
 
         public bool Debug { get { return debug; } }
@@ -45,6 +47,8 @@ namespace DesignPattern
         // Start is called before the first frame update
         void Start()
         {
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+
             cameraBound = playerCamera.GetComponent<CinemachineConfiner>();
         }
 
