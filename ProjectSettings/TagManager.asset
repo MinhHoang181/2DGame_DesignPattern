@@ -14,12 +14,12 @@ TagManager:
   - Water
   - UI
   - Player
-  - Character
+  - Zombie
   - Background
   - Block
-  - 
-  - 
-  - 
+  - CameraBound
+  - PlayerBound
+  - ZombieBound
   - 
   - 
   - 

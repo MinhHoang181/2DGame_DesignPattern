@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using DesignPattern.Factory;
+using Cinemachine;
 
 namespace DesignPattern
 {
@@ -33,14 +34,18 @@ namespace DesignPattern
         public bool Debug { get { return debug; } }
         [SerializeField] bool debug;
 
+        [SerializeField] GameObject playerCamera;
+        private CinemachineConfiner cameraBound;
+
         public Player Player { get { return player; } }
         private Player player;
         public bool IsPause { get { return isPause; } }
         private bool isPause;
+
         // Start is called before the first frame update
         void Start()
         {
-            
+            cameraBound = playerCamera.GetComponent<CinemachineConfiner>();
         }
 
         // Update is called once per frame
@@ -66,7 +71,12 @@ namespace DesignPattern
                 isPause = true;
             }
             gameStateChangedEvent(isPause);
-        } 
+        }
+
+        public void UpdateCamera()
+        {
+            cameraBound.InvalidatePathCache();
+        }
     }
 }
 
