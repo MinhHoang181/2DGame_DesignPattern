@@ -12,6 +12,7 @@ namespace DesignPattern.Strategy
 		[SerializeField] LayerMask hitLayers;
 
 		[SerializeField] WeaponScriptableObject weaponTest;
+		[SerializeField] WeaponScriptableObject weaponTest2;
 
 		private IWeapon iWeapon;
 		private CircularLinkedList<WeaponScriptableObject> weapons = new CircularLinkedList<WeaponScriptableObject>();
@@ -20,13 +21,8 @@ namespace DesignPattern.Strategy
 		void Start()
 		{
 			weapons.Append(weaponTest);
+			weapons.Append(weaponTest2);
 			UseWeapon(weapons.Current.Value);
-		}
-
-		// Update is called once per frame
-		void Update()
-		{
-
 		}
 
 		public void Fire(Vector2 direction)
@@ -34,7 +30,19 @@ namespace DesignPattern.Strategy
 			iWeapon.Shoot(direction);
 		}
 
-        public void UseWeapon(WeaponScriptableObject weapon)
+		public void ChangeNextWeapon()
+        {
+			weapons.NextNode();
+			UseWeapon(weapons.Current.Value);
+        }
+
+		public void ChangePrevWeapon()
+        {
+			weapons.PrevNode();
+			UseWeapon(weapons.Current.Value);
+        }
+
+        private void UseWeapon(WeaponScriptableObject weapon)
         {
             Component c = gameObject.GetComponent<IWeapon>() as Component;
             if (c != null)
@@ -48,7 +56,7 @@ namespace DesignPattern.Strategy
 					iWeapon = gameObject.AddComponent<Piston>();
 					break;
 				default:
-					iWeapon = gameObject.AddComponent<Piston>();
+					iWeapon = gameObject.AddComponent<Hand>();
 					break;
 			}
 

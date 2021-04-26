@@ -324,6 +324,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 795900718, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
+      propertyPath: changeNext
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 795900718, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
+      propertyPath: changePrevious
+      value: 113
+      objectReference: {fileID: 0}
     - target: {fileID: 139818014253087808, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
       propertyPath: m_Name
       value: GameController

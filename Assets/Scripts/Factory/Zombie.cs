@@ -192,6 +192,7 @@ namespace DesignPattern.Factory
             {
                 Vector2 direction = (collision.transform.position - transform.position).normalized;
                 sprite.right = direction;
+                
                 if (isAttack == false)
                 {
                     StartCoroutine(StartAttack());

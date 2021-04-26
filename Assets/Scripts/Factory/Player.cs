@@ -26,6 +26,7 @@ namespace DesignPattern.Factory
             }
         }
         public float Speed { get { return speed; } set { speed = value; } }
+        public WeaponController Weapon { get { return weapon; } }
 
         [Header("Stats")]
         [SerializeField] int health;
@@ -85,10 +86,6 @@ namespace DesignPattern.Factory
 
             Vector2 direction = (weapon.ShootPoint.position - transform.position).normalized;
             weapon.Fire(direction);
-        }
-
-        public void ChangeWeapon()
-        {
         }
 
         public void TakeDamage(int damage, float pushBackStrength, Vector2 direction)

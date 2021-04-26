@@ -26,7 +26,7 @@ namespace DesignPattern
         }
         #endregion
 
-        private PlayerCommand btnUp, btnDown, btnLeft, btnRight, btnAttack, btnChangeWeapon;
+        private PlayerCommand btnUp, btnDown, btnLeft, btnRight, btnAttack, btnChangeNextWeapon, btnChangePrevWeapon;
 
         [Header("Move")]
         [SerializeField] KeyCode up = KeyCode.W;
@@ -35,8 +35,8 @@ namespace DesignPattern
         [SerializeField] KeyCode right = KeyCode.D;
         [Header("Weapon")]
         [SerializeField] KeyCode attack = KeyCode.Mouse0;
-        [SerializeField] KeyCode changeLeft = KeyCode.Q;
-        [SerializeField] KeyCode changeRight = KeyCode.E;
+        [SerializeField] KeyCode changeNext = KeyCode.Q;
+        [SerializeField] KeyCode changePrevious = KeyCode.E;
         [SerializeField] KeyCode reload = KeyCode.R;
         [Header("Setting")]
         [SerializeField] KeyCode pause = KeyCode.Escape;
@@ -49,7 +49,8 @@ namespace DesignPattern
             btnDown = new MoveDown(GameController.Instance.Player);
             btnRight = new MoveRight(GameController.Instance.Player);
             btnAttack = new PlayerAttack(GameController.Instance.Player);
-            btnChangeWeapon = new PlayerChangeWeapon(GameController.Instance.Player);
+            btnChangeNextWeapon = new PlayerChangeNextWeapon(GameController.Instance.Player);
+            btnChangePrevWeapon = new PlayerChangePrevioustWeapon(GameController.Instance.Player);
 
             GameController.Instance.playerChangedEvent += UpdateButton;
         }
@@ -80,7 +81,8 @@ namespace DesignPattern
             btnLeft.player = player;
             btnRight.player = player;
             btnAttack.player = player;
-            btnChangeWeapon.player = player;
+            btnChangeNextWeapon.player = player;
+            btnChangePrevWeapon.player = player;
         }
 
         private void PlayerControl()
@@ -112,13 +114,13 @@ namespace DesignPattern
             {
                 Debug.Log("reload");
             }
-            if (Input.GetKeyDown(changeLeft))
+            if (Input.GetKeyDown(changeNext))
             {
-                Debug.Log("Change to weapon on left");
+                btnChangeNextWeapon.Execute();
             }
-            if (Input.GetKeyDown(changeRight))
+            if (Input.GetKeyDown(changePrevious))
             {
-                Debug.Log("Change to weapon in right");
+                btnChangePrevWeapon.Execute();
             }
         }
 

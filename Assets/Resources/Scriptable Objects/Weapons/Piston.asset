@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Piston
   m_EditorClassIdentifier: 
   weaponSprite: {fileID: 21300000, guid: d42cefc084c5f431aaedfd90e226a601, type: 3}
-  bullet: {fileID: 630976925410983182, guid: 872cd261d1aba4512a3325d4acaf1cd0, type: 3}
   weaponName: Piston
-  type: 0
-  damage: 1
+  type: 1
+  damage: 3
   pushBackStrength: 1
   distance: 5
   fireDelay: 0.5
+  bullet: {fileID: 630976925410983182, guid: 872cd261d1aba4512a3325d4acaf1cd0, type: 3}
+  ammoQuantity: 8

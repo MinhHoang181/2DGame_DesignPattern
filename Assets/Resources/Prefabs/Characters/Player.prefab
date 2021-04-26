@@ -306,7 +306,8 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 704
-  weaponTest: {fileID: 11400000, guid: ef973b1fbbea0429982d199eb39233f1, type: 2}
+  weaponTest: {fileID: 11400000, guid: 625db3d52d9d74d4c8a04c73eb5dd55b, type: 2}
+  weaponTest2: {fileID: 11400000, guid: ef973b1fbbea0429982d199eb39233f1, type: 2}
 --- !u!1 &6071250999511816719
 GameObject:
   m_ObjectHideFlags: 0
