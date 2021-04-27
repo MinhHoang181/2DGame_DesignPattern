@@ -9,9 +9,8 @@ namespace DesignPattern.Strategy
     {
         int Damage { get;}
         Transform ShootPoint { get; set; }
-        LayerMask HitLayers { get; set; }
 
-        WeaponScriptableObject Weapon { get; set; }
+        ScriptableWeapon Weapon { get; set; }
 
         void Shoot(Vector2 direction);
     }

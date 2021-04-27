@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DesignPattern.Factory;
 using UnityEngine;
 
 namespace DesignPattern.Strategy
@@ -6,43 +7,74 @@ namespace DesignPattern.Strategy
 	public class WeaponController : MonoBehaviour
 	{
 		public Transform ShootPoint { get { return shootPoint; } }
-		public WeaponScriptableObject Weapon { get { return weapons.Current.Value; } }
+		public ScriptableWeapon Weapon { get { return currentWeapon; } }
 
 		[SerializeField] Transform shootPoint;
-		[SerializeField] LayerMask hitLayers;
-
-		[SerializeField] WeaponScriptableObject weaponTest;
-		[SerializeField] WeaponScriptableObject weaponTest2;
+		private Character character;
 
 		private IWeapon iWeapon;
-		private CircularLinkedList<WeaponScriptableObject> weapons = new CircularLinkedList<WeaponScriptableObject>();
+		private List<ScriptableWeapon> weapons = new List<ScriptableWeapon>();
+
+		private ScriptableWeapon currentWeapon;
+		private int currentIndex = 0;
 
 		// Start is called before the first frame update
 		void Start()
 		{
-			weapons.Append(weaponTest);
-			weapons.Append(weaponTest2);
-			UseWeapon(weapons.Current.Value);
+			character = transform.GetComponent<Character>();
+
+			currentWeapon = weapons[currentIndex];
+			UseWeapon(currentWeapon);
 		}
 
 		public void Fire(Vector2 direction)
 		{
-			iWeapon.Shoot(direction);
+			if (iWeapon != null)
+            {
+				iWeapon.Shoot(direction);
+			}
 		}
+
+		public void AddWeapon(ScriptableWeapon weapon)
+        {
+			if (weapons.Contains(weapon))
+            {
+
+            } else
+            {
+				weapons.Add(weapon);
+			}
+        }
 
 		public void ChangeNextWeapon()
         {
-			weapons.NextNode();
-			UseWeapon(weapons.Current.Value);
+			if (currentIndex >= weapons.Count - 1)
+            {
+				currentIndex = 0;
+            } else
+            {
+				currentIndex++;
+            }
+
+			currentWeapon = weapons[currentIndex];
+			UseWeapon(currentWeapon);
         }
 
 		public void ChangePrevWeapon()
         {
-			weapons.PrevNode();
-			UseWeapon(weapons.Current.Value);
-        }
+			if (currentIndex <= 0)
+            {
+				currentIndex = weapons.Count - 1;
+            } else
+            {
+				currentIndex--;
+            }
 
-        private void UseWeapon(WeaponScriptableObject weapon)
+			currentWeapon = weapons[currentIndex];
+			UseWeapon(currentWeapon);
+		}
+
+        private void UseWeapon(ScriptableWeapon weapon)
         {
             Component c = gameObject.GetComponent<IWeapon>() as Component;
             if (c != null)
@@ -61,10 +93,9 @@ namespace DesignPattern.Strategy
 			}
 
             iWeapon.ShootPoint = shootPoint;
-            iWeapon.HitLayers = hitLayers;
 			iWeapon.Weapon = weapon;
 
-			GameController.Instance.weaponChangedEvent(weapon);
+			GameController.Instance.weaponChangedEvent(character, weapon);
         }
     }
 }

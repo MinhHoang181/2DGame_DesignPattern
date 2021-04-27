@@ -26,30 +26,31 @@ namespace DesignPattern
         }
         #endregion
 
-        // Start is called before the first frame update
-        void Start()
+        private void OnEnable()
         {
             GameController.Instance.weaponChangedEvent += UpdateWeaponUI;
             GameController.Instance.playerHealthChangedEvent += UpdatePlayerHealthUI;
         }
-
-        // Update is called once per frame
-        void Update()
+        private void OnDisable()
         {
-
+            GameController.Instance.weaponChangedEvent -= UpdateWeaponUI;
+            GameController.Instance.playerHealthChangedEvent -= UpdatePlayerHealthUI;
         }
 
-        private void UpdateWeaponUI(WeaponScriptableObject weapon)
+        private void UpdateWeaponUI(Character character, ScriptableWeapon weapon)
         {
-            Player player = GameController.Instance.Player;
-            player.sprite.sprite = weapon.weaponSprite;
-            player.weaponText.text = weapon.weaponName;
+            character.Sprite.sprite = weapon.weaponSprite;
 
+            Player player = character as Player;
+            
+            if (player)
+            {
+                player.WeaponText.text = weapon.weaponName;
+            }
         }
-        private void UpdatePlayerHealthUI()
+        private void UpdatePlayerHealthUI(Player player)
         {
-            Player player = GameController.Instance.Player;
-            player.healthText.text = player.CurrentHealth + "/" + player.Health;
+            player.HealthText.text = player.CurrentHealth + "/" + player.Health;
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using DesignPattern.Strategy;
 
 [CreateAssetMenu(fileName = "Weapon", menuName = "Scriptable Object/Weapons/Weapon")]
-public class WeaponScriptableObject : ScriptableObject
+public class ScriptableWeapon : ScriptableObject
 {
     public Sprite weaponSprite;
 

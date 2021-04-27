@@ -1,21 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using DesignPattern;
+using DesignPattern.Factory;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+namespace DesignPattern
 {
-    void Update()
+    public class CameraController : MonoBehaviour
     {
-        if (GameController.Instance.Player != null)
+        #region SINGELTON
+        private CameraController() { }
+        public static CameraController Instance { get; private set; }
+
+        private void Awake()
         {
-            Move();
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
+
+            DontDestroyOnLoad(gameObject);
+        }
+        #endregion
+
+        [SerializeField] GameObject playerCamera;
+
+        private CinemachineConfiner cameraBound;
+        private CinemachineVirtualCamera virtualCamera;
+
+        private void Start()
+        {
+            cameraBound = playerCamera.GetComponent<CinemachineConfiner>();
+            virtualCamera = playerCamera.GetComponent<CinemachineVirtualCamera>();
+        }
+
+        public void UpdateCameraBound(PolygonCollider2D collider)
+        {
+            cameraBound.m_BoundingShape2D = collider;
+            cameraBound.InvalidatePathCache();
+        }
+
+        private void UpdateCameraFollow(Player player)
+        {
+            virtualCamera.Follow = player.transform;
         }
     }
-
-    private void Move()
-    {
-        Vector3 playerPosition = GameController.Instance.Player.transform.position;
-        transform.position = playerPosition + Vector3.back;
-    }
 }
+

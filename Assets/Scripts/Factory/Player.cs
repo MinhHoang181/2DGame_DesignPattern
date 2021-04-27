@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DesignPattern.Commands;
 using DesignPattern.Strategy;
 using TMPro;
 
@@ -9,36 +8,27 @@ namespace DesignPattern.Factory
 {
     public class Player : MonoBehaviour, Character
     {
-        public int Health { get { return health; } set { health = value; } }
-        public int CurrentHealth
-        {
-            get { return currentHealth; }
-            set
-            {
-                currentHealth = Mathf.Max(0, value);
-
-                GameController.Instance.playerHealthChangedEvent();
-
-                if (currentHealth.Equals(0))
-                {
-                    Die();
-                } 
-            }
-        }
-        public float Speed { get { return speed; } set { speed = value; } }
+        public ScriptableCharacter ScriptableCharacter { get { return scriptablePlayer; } }
+        public int Health { get { return health; } }
+        public int CurrentHealth { get { return currentHealth; } }
+        public float Speed { get { return speed; } }
         public WeaponController Weapon { get { return weapon; } }
+        
+        public SpriteRenderer Sprite { get { return sprite; } }
+        public TextMeshPro HealthText { get { return healthText; } }
+        public TextMeshPro WeaponText { get { return weaponText; } }
 
-        [Header("Stats")]
-        [SerializeField] int health;
+        [SerializeField] ScriptablePlayer scriptablePlayer;
+        private int health;
         private int currentHealth;
-        [SerializeField] float speed;
-        [SerializeField] float timeStun;
+        private float speed;
+        private float timeStun;
 
-        [Header("UI")]
-        [SerializeField] public TextMeshPro healthText;
-        [SerializeField] public TextMeshPro weaponText;
-        [SerializeField] public SpriteRenderer sprite;
+        private TextMeshPro healthText;
+        private TextMeshPro weaponText;
+        private SpriteRenderer sprite;
 
+        private Transform attackPoint;
         private WeaponController weapon;
         private Rigidbody2D rigBody;
 
@@ -49,10 +39,17 @@ namespace DesignPattern.Factory
 
         public void Start()
         {
-            Setting();
-
             weapon = transform.GetComponent<WeaponController>();
             rigBody = transform.GetComponent<Rigidbody2D>();
+            // Sprite
+            sprite = transform.Find("Sprite").transform.GetComponent<SpriteRenderer>();
+            attackPoint = sprite.transform.Find("Attack Point").transform;
+            // UI
+            Transform UITranform = transform.Find("UI").transform;
+            healthText = UITranform.Find("Health").GetComponent<TextMeshPro>();
+            weaponText = UITranform.Find("Weapon").GetComponent<TextMeshPro>();
+
+            Setting();
         }
 
         public void Update()
@@ -62,7 +59,18 @@ namespace DesignPattern.Factory
 
         public void Setting()
         {
-            CurrentHealth = Health;
+            // Stats
+            health = scriptablePlayer.health;
+            currentHealth = scriptablePlayer.health;
+
+            GameController.Instance.playerHealthChangedEvent(this);
+
+            speed = scriptablePlayer.speed;
+            timeStun = scriptablePlayer.timeStun;
+            // WeaponController
+            weapon.AddWeapon(scriptablePlayer.weapon);
+            // Sprite
+            sprite.sprite = scriptablePlayer.characterSprite;
         }
 
         public void Action()
@@ -90,7 +98,14 @@ namespace DesignPattern.Factory
 
         public void TakeDamage(int damage, float pushBackStrength, Vector2 direction)
         {
-            CurrentHealth -= damage;
+            currentHealth = Mathf.Max(0, currentHealth - damage);
+
+            GameController.Instance.playerHealthChangedEvent(this);
+
+            if (currentHealth.Equals(0))
+            {
+                Die();
+            }
 
             PushBack(pushBackStrength, direction);
             if (stunCoroutine != null)

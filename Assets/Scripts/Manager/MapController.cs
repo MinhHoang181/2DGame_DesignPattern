@@ -142,7 +142,7 @@ namespace DesignPattern
 
             cameraBound.SetPath(0, points);
 
-            GameController.Instance.UpdateCamera();
+            CameraController.Instance.UpdateCameraBound(cameraBound);
         }
     }
 }

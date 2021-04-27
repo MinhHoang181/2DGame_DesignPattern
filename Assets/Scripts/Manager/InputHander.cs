@@ -41,6 +41,15 @@ namespace DesignPattern
         [Header("Setting")]
         [SerializeField] KeyCode pause = KeyCode.Escape;
 
+        private void OnEnable()
+        {
+            GameController.Instance.playerChangedEvent += UpdateButton;
+        }
+        private void OnDisable()
+        {
+            GameController.Instance.playerChangedEvent -= UpdateButton;
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -51,8 +60,6 @@ namespace DesignPattern
             btnAttack = new PlayerAttack(GameController.Instance.Player);
             btnChangeNextWeapon = new PlayerChangeNextWeapon(GameController.Instance.Player);
             btnChangePrevWeapon = new PlayerChangePrevioustWeapon(GameController.Instance.Player);
-
-            GameController.Instance.playerChangedEvent += UpdateButton;
         }
 
         // Update is called once per frame
@@ -60,7 +67,10 @@ namespace DesignPattern
         {
             if (!GameController.Instance.IsPause)
             {
-                PlayerControl();
+                if (GameController.Instance.Player != null)
+                {
+                    PlayerControl();
+                }
             }
 
             if (Input.GetKeyDown(pause))

@@ -8,42 +8,32 @@ namespace DesignPattern.Factory
 {
     public class Zombie : MonoBehaviour, Character
     {
-        public int Health { get { return health; } set { health = value; } }
-        public int CurrentHealth
-        {
-            get { return currentHealth; }
-            set
-            {
-                currentHealth = Mathf.Max(0, value);
-                healthText.text = CurrentHealth + "/" + Health;
-                if (currentHealth.Equals(0))
-                {
-                    // Chet
-                    Die();
-                }
-            }
-        }
-        public float Speed { get { return speed; } set { speed = value; } }
+        public ScriptableCharacter ScriptableCharacter { get { return scriptableZombie; } }
+        public int Health { get { return health; } }
+        public int CurrentHealth {get { return currentHealth; } }
+        public float Speed { get { return speed; } }
 
-        [Header("Stats")]
-        [SerializeField] protected int health;
+        public SpriteRenderer Sprite { get { return sprite; } }
+
+        [SerializeField] ScriptableZombie scriptableZombie;
+        protected int health;
         protected int currentHealth;
-        [SerializeField] protected float speed;
-        [SerializeField] protected int damage;
-        [SerializeField] protected float timeToAttack;
-        [SerializeField] protected int pushBackStrength;
-        [SerializeField] protected float timeStun;
+        protected float speed;
+        protected int damage;
+        protected float timeToAttack;
+        protected int pushBackStrength;
+        protected float timeStun;
 
-        [Header("UI")]
-        [SerializeField] TextMeshPro healthText;
+        protected TextMeshPro healthText;
 
+        // Boolean
         protected bool isAttack = false;
         protected bool isTakeDamage = false;
+        protected bool isFirsSpawn = true;
 
-        protected Player player;
         protected Vector3 playerPosition;
         protected Rigidbody2D rigBody;
-        protected Transform sprite;
+        protected SpriteRenderer sprite;
         protected Transform attackPoint;
 
         protected Coroutine stunCoroutine;
@@ -53,21 +43,25 @@ namespace DesignPattern.Factory
         protected List<PathNode> pathNodes = new List<PathNode>();
         #endregion
 
-        protected void Awake()
-        {
-            Setting();
-        }
-
         // Start is called before the first frame update
         protected void Start()
         {
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-            playerPosition = transform.position;
             rigBody = transform.GetComponent<Rigidbody2D>();
-            sprite = transform.Find("Sprite").transform;
-            attackPoint = sprite.Find("Attack Point").transform;
+            // Sprite
+            sprite = transform.Find("Sprite").transform.GetComponent<SpriteRenderer>();
+            attackPoint = sprite.transform.Find("Attack Point").transform;
+            // UI
+            Transform UITranform = transform.Find("UI").transform;
+            healthText = UITranform.Find("Health").GetComponent<TextMeshPro>();
 
-            InvokeRepeating(nameof(SearchPlayer), 0f, 1f);
+            Setting();
+        }
+
+        protected void OnEnable()
+        {
+            if (isFirsSpawn) return;
+
+            Setting();
         }
 
         protected void Update()
@@ -78,6 +72,26 @@ namespace DesignPattern.Factory
             {
                 DrawWayToTarget();
             }
+        }
+
+        public void Setting()
+        {
+            health = scriptableZombie.health;
+            currentHealth = scriptableZombie.health;
+            speed = scriptableZombie.speed;
+            damage = scriptableZombie.damage;
+            timeToAttack = scriptableZombie.timeToAttack;
+            timeStun = scriptableZombie.timeStun;
+            // UI
+            healthText.text = CurrentHealth + "/" + Health;
+            // Sprite
+            sprite.sprite = scriptableZombie.characterSprite;
+
+            isFirsSpawn = false;
+
+            playerPosition = transform.position;
+            // setting loop search player
+            InvokeRepeating(nameof(SearchPlayer), 0f, 1f);
         }
 
         protected virtual void Action()
@@ -91,14 +105,7 @@ namespace DesignPattern.Factory
         {
             Vector2 force = direction * speed * Time.deltaTime;
             rigBody.velocity += force;
-            sprite.right = direction;
-        }
-
-        public void Setting()
-        {
-            CurrentHealth = Health;
-
-            healthText.text = CurrentHealth + "/" + Health;    
+            sprite.transform.right = direction;
         }
 
         protected IEnumerator StartAttack()
@@ -125,7 +132,14 @@ namespace DesignPattern.Factory
 
         public void TakeDamage(int damage,float pushBackStrength , Vector2 direction)
         {
-            CurrentHealth -= damage;
+            currentHealth = Mathf.Max(0, currentHealth - damage);
+
+            healthText.text = CurrentHealth + "/" + Health;
+
+            if (currentHealth.Equals(0))
+            {
+                Die();
+            }
 
             PushBack(pushBackStrength, direction);
 
@@ -145,6 +159,8 @@ namespace DesignPattern.Factory
 
         public void Die()
         {
+            CancelInvoke();
+
             Destroy(gameObject);
         }
 
@@ -158,6 +174,7 @@ namespace DesignPattern.Factory
         #region PATHFINDING
         protected void SearchPlayer()
         {
+            Player player = GameController.Instance.Player;
             if (playerPosition != player.transform.position)
             {
                 playerPosition = player.transform.position;
@@ -191,7 +208,7 @@ namespace DesignPattern.Factory
             if (collision.transform.tag.Equals("Player"))
             {
                 Vector2 direction = (collision.transform.position - transform.position).normalized;
-                sprite.right = direction;
+                sprite.transform.right = direction;
                 
                 if (isAttack == false)
                 {

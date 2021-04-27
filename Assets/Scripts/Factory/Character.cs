@@ -6,8 +6,13 @@ namespace DesignPattern.Factory
 {
     public interface Character
     {
-        int Health { get; set; }
-        float Speed { get; set; }
+        public ScriptableCharacter ScriptableCharacter { get; }
+        public int Health { get; }
+        public int CurrentHealth { get; }
+        public float Speed { get; }
+
+        public SpriteRenderer Sprite { get; }
+
 
         public void Move(Vector3 direction);
 

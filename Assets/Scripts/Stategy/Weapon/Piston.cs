@@ -9,14 +9,12 @@ namespace DesignPattern.Strategy
     {
         public int Damage { get { return piston.damage; } }
         public Transform ShootPoint { get { return shootPoint; } set { shootPoint = value; } }
-        public LayerMask HitLayers { get { return hitLayers; } set { hitLayers = value; } }
-        public WeaponScriptableObject Weapon { get { return piston; } set { piston = (PistonScriptableObject)value; } }
+        public ScriptableWeapon Weapon { get { return piston; } set { piston = (ScriptablePiston)value; } }
 
         private float timeToFire = 0;
 
         private Transform shootPoint;
-        private LayerMask hitLayers;
-        private PistonScriptableObject piston;
+        private ScriptablePiston piston;
 
         public void Update()
         {
@@ -41,7 +39,7 @@ namespace DesignPattern.Strategy
 
             Vector3 endLine = shootPoint.position + new Vector3(direction.x, direction.y, 0) * piston.distance;
 
-            RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, direction, piston.distance, hitLayers);
+            RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, direction, piston.distance, GameController.Instance.HitLayers);
             if (hit)
             {
                 Character character = hit.collider.GetComponent<Character>();

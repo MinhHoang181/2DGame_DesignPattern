@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4023790435845561371}
   m_Layer: 6
-  m_Name: Shoot Point
+  m_Name: Attack Point
   m_TagString: Untagged
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -284,12 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61090481922a74dbd8a9ae47d3758d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  speed: 3
-  timeStun: 1
-  healthText: {fileID: 3929016028261201406}
-  weaponText: {fileID: 3304359253074595954}
-  sprite: {fileID: 2721888886269073914}
+  scriptablePlayer: {fileID: 11400000, guid: fc810ca6119564f178cf6e5ef08fd857, type: 2}
 --- !u!114 &3142922074951999197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,11 +298,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootPoint: {fileID: 4023790435845561371}
-  hitLayers:
-    serializedVersion: 2
-    m_Bits: 704
-  weaponTest: {fileID: 11400000, guid: 625db3d52d9d74d4c8a04c73eb5dd55b, type: 2}
-  weaponTest2: {fileID: 11400000, guid: ef973b1fbbea0429982d199eb39233f1, type: 2}
 --- !u!1 &6071250999511816719
 GameObject:
   m_ObjectHideFlags: 0

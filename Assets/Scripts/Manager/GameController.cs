@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using DesignPattern.Factory;
-using Cinemachine;
 
 namespace DesignPattern
 {
@@ -28,16 +27,17 @@ namespace DesignPattern
 
         #region DELEGATES
         public Action<Player> playerChangedEvent;
-        public Action playerHealthChangedEvent;
+        public Action<Player> playerHealthChangedEvent;
         public Action<bool> gameStateChangedEvent;
-        public Action<WeaponScriptableObject> weaponChangedEvent;
+        public Action<Character ,ScriptableWeapon> weaponChangedEvent;
         #endregion
 
         public bool Debug { get { return debug; } }
         [SerializeField] bool debug;
+        public LayerMask HitLayers { get { return hitLayers; } }
+        [SerializeField] LayerMask hitLayers;
 
-        [SerializeField] GameObject playerCamera;
-        private CinemachineConfiner cameraBound;
+        
 
         public Player Player { get { return player; } }
         private Player player;
@@ -47,9 +47,7 @@ namespace DesignPattern
         // Start is called before the first frame update
         void Start()
         {
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
-            cameraBound = playerCamera.GetComponent<CinemachineConfiner>();
         }
 
         // Update is called once per frame
@@ -57,7 +55,7 @@ namespace DesignPattern
         {
             if (player == null)
             {
-                player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
                 if (player)
                 {
                     playerChangedEvent(player);
@@ -74,13 +72,10 @@ namespace DesignPattern
             {
                 isPause = true;
             }
-            gameStateChangedEvent(isPause);
+            //gameStateChangedEvent(isPause);
         }
 
-        public void UpdateCamera()
-        {
-            cameraBound.InvalidatePathCache();
-        }
+        
     }
 }
 

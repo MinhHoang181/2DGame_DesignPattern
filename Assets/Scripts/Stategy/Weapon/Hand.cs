@@ -9,12 +9,10 @@ namespace DesignPattern.Strategy
     {
         public int Damage { get { return hand.damage; } }
         public Transform ShootPoint { get { return shootPoint; } set { shootPoint = value; } }
-        public LayerMask HitLayers { get { return hitLayers; } set { hitLayers = value; } }
-        public WeaponScriptableObject Weapon { get { return hand; } set { hand = value; } }
+        public ScriptableWeapon Weapon { get { return hand; } set { hand = value; } }
 
         private Transform shootPoint;
-        private LayerMask hitLayers;
-        private WeaponScriptableObject hand;
+        private ScriptableWeapon hand;
 
         private float timeToFire = 0;
 
@@ -37,7 +35,7 @@ namespace DesignPattern.Strategy
 
         private void StartShoot(Vector2 direction)
         {
-            RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, direction, hand.distance, hitLayers);
+            RaycastHit2D hit = Physics2D.Raycast(shootPoint.position, direction, hand.distance, GameController.Instance.HitLayers);
             if (hit)
             {
                 Character character = hit.collider.GetComponent<Character>();
