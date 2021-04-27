@@ -6,37 +6,17 @@ using UnityEngine;
 
 namespace DesignPattern.Factory
 {
-    public class Zombie : MonoBehaviour, Character
+    public class Zombie : Character
     {
-        public ScriptableCharacter ScriptableCharacter { get { return scriptableZombie; } }
-        public int Health { get { return health; } }
-        public int CurrentHealth {get { return currentHealth; } }
-        public float Speed { get { return speed; } }
-
-        public SpriteRenderer Sprite { get { return sprite; } }
-
-        [SerializeField] ScriptableZombie scriptableZombie;
-        protected int health;
-        protected int currentHealth;
-        protected float speed;
+        protected ScriptableZombie scriptableZombie;
         protected int damage;
         protected float timeToAttack;
         protected int pushBackStrength;
-        protected float timeStun;
-
-        protected TextMeshPro healthText;
 
         // Boolean
         protected bool isAttack = false;
-        protected bool isTakeDamage = false;
-        protected bool isFirsSpawn = true;
-
+        
         protected Vector3 playerPosition;
-        protected Rigidbody2D rigBody;
-        protected SpriteRenderer sprite;
-        protected Transform attackPoint;
-
-        protected Coroutine stunCoroutine;
         protected Coroutine attackCoroutine;
 
         #region PATHFINDING VALUES
@@ -44,22 +24,9 @@ namespace DesignPattern.Factory
         #endregion
 
         // Start is called before the first frame update
-        protected void Start()
+        protected override void Start()
         {
-            rigBody = transform.GetComponent<Rigidbody2D>();
-            // Sprite
-            sprite = transform.Find("Sprite").transform.GetComponent<SpriteRenderer>();
-            attackPoint = sprite.transform.Find("Attack Point").transform;
-            // UI
-            Transform UITranform = transform.Find("UI").transform;
-            healthText = UITranform.Find("Health").GetComponent<TextMeshPro>();
-
-            Setting();
-        }
-
-        protected void OnEnable()
-        {
-            if (isFirsSpawn) return;
+            base.Start();
 
             Setting();
         }
@@ -74,36 +41,28 @@ namespace DesignPattern.Factory
             }
         }
 
-        public void Setting()
+        protected override void Setting()
         {
-            health = scriptableZombie.health;
-            currentHealth = scriptableZombie.health;
-            speed = scriptableZombie.speed;
+            base.Setting();
+            scriptableZombie = (ScriptableZombie)scriptableCharacter;
             damage = scriptableZombie.damage;
             timeToAttack = scriptableZombie.timeToAttack;
-            timeStun = scriptableZombie.timeStun;
-            // UI
-            healthText.text = CurrentHealth + "/" + Health;
-            // Sprite
-            sprite.sprite = scriptableZombie.characterSprite;
-
-            isFirsSpawn = false;
 
             playerPosition = transform.position;
             // setting loop search player
             InvokeRepeating(nameof(SearchPlayer), 0f, 1f);
         }
 
-        protected virtual void Action()
+        protected void Action()
         {
             if (isTakeDamage) return;
             if (isAttack) return;
             AIMove();
         }
 
-        public void Move(Vector3 direction)
+        public override void Move(Vector3 direction)
         {
-            Vector2 force = direction * speed * Time.deltaTime;
+            Vector2 force = direction * Speed * Time.deltaTime;
             rigBody.velocity += force;
             sprite.transform.right = direction;
         }
@@ -116,7 +75,7 @@ namespace DesignPattern.Factory
             isAttack = false;
         }
 
-        public void Attack()
+        public override void Attack()
         {
             Vector2 direction = (attackPoint.position - transform.position).normalized;
             RaycastHit2D hit = Physics2D.Raycast(attackPoint.position, direction, 0.1f);
@@ -130,45 +89,11 @@ namespace DesignPattern.Factory
             }
         }
 
-        public void TakeDamage(int damage,float pushBackStrength , Vector2 direction)
-        {
-            currentHealth = Mathf.Max(0, currentHealth - damage);
-
-            healthText.text = CurrentHealth + "/" + Health;
-
-            if (currentHealth.Equals(0))
-            {
-                Die();
-            }
-
-            PushBack(pushBackStrength, direction);
-
-            if (stunCoroutine != null)
-            {
-                StopCoroutine(stunCoroutine);
-            }
-            stunCoroutine = StartCoroutine(OnStunned(timeStun));
-        }
-
-        public void PushBack(float pushBackStrength, Vector2 direction)
-        {
-            rigBody.velocity = Vector2.zero;
-            Vector2 force = direction * pushBackStrength * 50;
-            rigBody.AddForce(force);
-        }
-
-        public void Die()
+        protected override void Die()
         {
             CancelInvoke();
 
             Destroy(gameObject);
-        }
-
-        IEnumerator OnStunned(float second)
-        {
-            isTakeDamage = true;
-            yield return new WaitForSeconds(second);
-            isTakeDamage = false;
         }
 
         #region PATHFINDING
@@ -210,6 +135,20 @@ namespace DesignPattern.Factory
                 Vector2 direction = (collision.transform.position - transform.position).normalized;
                 sprite.transform.right = direction;
                 
+                if (isAttack == false)
+                {
+                    StartCoroutine(StartAttack());
+                }
+            }
+        }
+
+        private void OnTriggerStay2D(Collider2D collision)
+        {
+            if (collision.transform.tag.Equals("Player"))
+            {
+                Vector2 direction = (collision.transform.position - transform.position).normalized;
+                sprite.transform.right = direction;
+
                 if (isAttack == false)
                 {
                     StartCoroutine(StartAttack());

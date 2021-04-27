@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DesignPattern.Factory;
+using DesignPattern.Strategy;
 using UnityEngine;
 
 namespace DesignPattern
@@ -28,29 +29,23 @@ namespace DesignPattern
 
         private void OnEnable()
         {
-            GameController.Instance.weaponChangedEvent += UpdateWeaponUI;
-            GameController.Instance.playerHealthChangedEvent += UpdatePlayerHealthUI;
+            WeaponController.OnWeaponChange += UpdateWeaponUI;
+            Character.OnHealthChange += UpdateHealthUI;
         }
         private void OnDisable()
         {
-            GameController.Instance.weaponChangedEvent -= UpdateWeaponUI;
-            GameController.Instance.playerHealthChangedEvent -= UpdatePlayerHealthUI;
+            WeaponController.OnWeaponChange -= UpdateWeaponUI;
+            Character.OnHealthChange -= UpdateHealthUI;
         }
 
         private void UpdateWeaponUI(Character character, ScriptableWeapon weapon)
         {
             character.Sprite.sprite = weapon.weaponSprite;
-
-            Player player = character as Player;
-            
-            if (player)
-            {
-                player.WeaponText.text = weapon.weaponName;
-            }
         }
-        private void UpdatePlayerHealthUI(Player player)
+
+        private void UpdateHealthUI(Character character)
         {
-            player.HealthText.text = player.CurrentHealth + "/" + player.Health;
+            character.HealthText.text = character.CurrentHealth + "/" + character.Health;
         }
     }
 }

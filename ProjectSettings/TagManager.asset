@@ -20,7 +20,7 @@ TagManager:
   - CameraBound
   - PlayerBound
   - ZombieBound
-  - ZombieBody
+  - 
   - 
   - 
   - 
@@ -48,9 +48,6 @@ TagManager:
     locked: 0
   - name: Character
     uniqueID: 2991742043
-    locked: 0
-  - name: Player
-    uniqueID: 3455706907
     locked: 0
   - name: UI Text
     uniqueID: 1870453507

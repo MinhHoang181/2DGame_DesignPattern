@@ -165,6 +165,10 @@ PrefabInstance:
       propertyPath: zombiePrefab
       value: 
       objectReference: {fileID: 1253356904306345083, guid: 1cf09c3b320d242bc99c8e3314714d6f, type: 3}
+    - target: {fileID: 2926610053529931937, guid: 302df2ef8085e46749bd83394aa63710, type: 3}
+      propertyPath: scriptableZombie
+      value: 
+      objectReference: {fileID: 11400000, guid: d0447013145c54048b36c205fa600404, type: 2}
     - target: {fileID: 3038888877459066562, guid: 302df2ef8085e46749bd83394aa63710, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -294,6 +298,10 @@ PrefabInstance:
       propertyPath: hitLayers.m_Bits
       value: 704
       objectReference: {fileID: 0}
+    - target: {fileID: 5827843946352847750, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
+      propertyPath: scriptablePlayer
+      value: 
+      objectReference: {fileID: 11400000, guid: fc810ca6119564f178cf6e5ef08fd857, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c486d70835734cd18bb718ea6a2596f, type: 3}
 --- !u!1001 &4401434816941014567

@@ -33,6 +33,16 @@ namespace DesignPattern
         private CinemachineConfiner cameraBound;
         private CinemachineVirtualCamera virtualCamera;
 
+        private void OnEnable()
+        {
+            GameController.PlayerChangedEvent += UpdateCameraFollow;
+        }
+
+        private void OnDisable()
+        {
+            GameController.PlayerChangedEvent -= UpdateCameraFollow;
+        }
+
         private void Start()
         {
             cameraBound = playerCamera.GetComponent<CinemachineConfiner>();

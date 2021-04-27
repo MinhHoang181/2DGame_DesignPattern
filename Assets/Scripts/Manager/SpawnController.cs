@@ -27,23 +27,18 @@ namespace DesignPattern
         [SerializeField] Transform[] spawnPoints;
 
         [Header("Prefab")]
-        [SerializeField] GameObject playerPrefab;
-        [SerializeField] GameObject zombiePrefab;
+        [SerializeField] GameObject characterPrefab;
 
-        private PlayerFactory playerFactory;
-        private ZombieFactory zombieFactory;
+        [Header("Scriptable Object")]
+        [SerializeField] ScriptableZombie scriptableZombie;
 
         // Start is called before the first frame update
         void Start()
         {
-            playerFactory = new PlayerFactory(playerPrefab);
-            zombieFactory = new ZombieFactory(zombiePrefab);
+            GameObject player = CharacterFactory.CreateCharacter(GameController.Instance.ScriptablePlayer);
+            player.transform.position = new Vector3(4, 4, 0);
 
-            GameObject player = playerFactory.Create();
-            Instantiate(player, new Vector3(4, 4, 0), Quaternion.identity);
-
-            GameObject zombie = zombieFactory.Create();
-            Instantiate(zombie, new Vector3(3, 3, 0), Quaternion.identity);
+            SpawnZombie(6);
         }
 
         // Update is called once per frame
@@ -52,14 +47,15 @@ namespace DesignPattern
             
         }
 
-        private void SpawnZombie(GameObject zombie, int number)
+        private void SpawnZombie(int number)
         {
             for (int i = 0; i < number; i++)
             {
                 int randIndex = Random.Range(0, spawnPoints.Length);
                 Vector3 randOffset = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
                 Vector3 randPosition = spawnPoints[randIndex].position + randOffset;
-                Transform newZombie = Instantiate(zombie, randPosition, Quaternion.identity).transform;
+                GameObject zombie = CharacterFactory.CreateCharacter(scriptableZombie);
+                zombie.transform.position = randPosition;
             }
         }
     }

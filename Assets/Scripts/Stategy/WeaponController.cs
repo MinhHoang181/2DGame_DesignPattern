@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DesignPattern.Factory;
 using UnityEngine;
@@ -6,10 +7,9 @@ namespace DesignPattern.Strategy
 {
 	public class WeaponController : MonoBehaviour
 	{
-		public Transform ShootPoint { get { return shootPoint; } }
+		public static event Action<Character, ScriptableWeapon> OnWeaponChange;
 		public ScriptableWeapon Weapon { get { return currentWeapon; } }
 
-		[SerializeField] Transform shootPoint;
 		private Character character;
 
 		private IWeapon iWeapon;
@@ -92,10 +92,10 @@ namespace DesignPattern.Strategy
 					break;
 			}
 
-            iWeapon.ShootPoint = shootPoint;
+			iWeapon.ShootPoint = character.AttackPoint;
 			iWeapon.Weapon = weapon;
 
-			GameController.Instance.weaponChangedEvent(character, weapon);
+			OnWeaponChange?.Invoke(character, weapon);
         }
     }
 }

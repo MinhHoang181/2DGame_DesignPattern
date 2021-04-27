@@ -26,12 +26,11 @@ namespace DesignPattern
         #endregion
 
         #region DELEGATES
-        public Action<Player> playerChangedEvent;
-        public Action<Player> playerHealthChangedEvent;
-        public Action<bool> gameStateChangedEvent;
-        public Action<Character ,ScriptableWeapon> weaponChangedEvent;
+        public static event Action<Player> PlayerChangedEvent;
+        public static event Action<bool> GameStateChangedEvent;
         #endregion
-
+        public ScriptablePlayer ScriptablePlayer { get { return scriptablePlayer; } }
+        [SerializeField] ScriptablePlayer scriptablePlayer;
         public bool Debug { get { return debug; } }
         [SerializeField] bool debug;
         public LayerMask HitLayers { get { return hitLayers; } }
@@ -58,7 +57,7 @@ namespace DesignPattern
                 player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
                 if (player)
                 {
-                    playerChangedEvent(player);
+                    PlayerChangedEvent?.Invoke(player);
                 }
             }
         }

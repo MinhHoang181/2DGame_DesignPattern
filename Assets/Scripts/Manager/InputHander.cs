@@ -43,11 +43,11 @@ namespace DesignPattern
 
         private void OnEnable()
         {
-            GameController.Instance.playerChangedEvent += UpdateButton;
+            GameController.PlayerChangedEvent += UpdateButton;
         }
         private void OnDisable()
         {
-            GameController.Instance.playerChangedEvent -= UpdateButton;
+            GameController.PlayerChangedEvent -= UpdateButton;
         }
 
         // Start is called before the first frame update

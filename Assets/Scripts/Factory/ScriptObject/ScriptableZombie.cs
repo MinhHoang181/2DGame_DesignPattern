@@ -9,4 +9,6 @@ public class ScriptableZombie : ScriptableCharacter
     public int damage;
     public float timeToAttack;
     public float pushBackStrength;
+
+    public ScriptableZombie() : base(CharacterType.Zombie) { }
 }
