@@ -27,7 +27,7 @@ namespace DesignPattern
 
         #region DELEGATES
         public static event Action<Player> PlayerChangedEvent;
-        public static event Action<bool> GameStateChangedEvent;
+        //public static event Action<bool> GameStateChangedEvent;
         #endregion
         public ScriptablePlayer ScriptablePlayer { get { return scriptablePlayer; } }
         [SerializeField] ScriptablePlayer scriptablePlayer;
