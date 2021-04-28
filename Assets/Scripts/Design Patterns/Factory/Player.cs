@@ -36,7 +36,10 @@ namespace DesignPattern.Factory
 
             scriptablePlayer = (ScriptablePlayer)scriptableCharacter;
             // WeaponController
-            weapon.AddWeapon(scriptablePlayer.weapon);
+            foreach (ScriptableWeapon scriptableWeapon in scriptablePlayer.weapons)
+            {
+                weapon.AddWeapon(scriptableWeapon);
+            }
         }
 
         private void Action()

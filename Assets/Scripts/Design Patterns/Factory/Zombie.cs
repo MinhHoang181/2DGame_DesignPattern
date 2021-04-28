@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DesignPattern.State;
 using Pathfinding;
 using TMPro;
 using UnityEngine;
@@ -8,21 +10,58 @@ namespace DesignPattern.Factory
 {
     public class Zombie : Character
     {
+        public List<PathNode> PathNodes { get { return pathNodes; } set { pathNodes = value; } }
+        public Vector3 TargetPosition { get { return targetPosition; } set { targetPosition = value; } }
+        public float TimeToAttack { get { return timeToAttack; } }
+
+        public bool IsAttack { get { return isAttack; } set { isAttack = value; } }
+
         protected ScriptableZombie scriptableZombie;
         protected int damage;
         protected float timeToAttack;
-        protected int pushBackStrength;
+        protected float pushBackStrength;
 
         // Boolean
         protected bool isAttack = false;
         
-        protected Vector3 playerPosition;
+        protected Vector3 targetPosition;
         protected Coroutine attackCoroutine;
 
         #region PATHFINDING VALUES
         protected List<PathNode> pathNodes = new List<PathNode>();
         #endregion
 
+        private StateMachine stateMachine;
+
+        #region STATE PATTERN
+        private void Awake()
+        {
+            stateMachine = new StateMachine();
+
+            var search = new SearchState(this);
+            var move = new MoveState(this);
+            var attack = new AttackState(this);
+
+            // SEARCH -> MOVE
+            stateMachine.AddTransition(search, move, HasTarget());
+            // MOVE -> SEARCH
+            stateMachine.AddTransition(move, search, HasNoTarget());
+            stateMachine.AddTransition(move, search, StuckForASecond());
+            // MOVE -> ATTACK
+            stateMachine.AddTransition(move, attack, ReachRangeToAttack());
+            // ATTACK -> SEARCH
+            stateMachine.AddTransition(attack, search, OutRangeToAttack());
+
+            stateMachine.SetState(search);
+
+            Func<bool> HasTarget() => () => pathNodes.Count > 0;
+            Func<bool> HasNoTarget() => () => pathNodes.Count == 0; //|| targetPosition != GameController.Instance.Player.transform.position;
+            Func<bool> StuckForASecond() => () => move.TimeStuck > 1f;
+            Func<bool> ReachRangeToAttack() => () => Vector3.Distance(transform.position, GameController.Instance.Player.transform.position) < 1f;
+            Func<bool> OutRangeToAttack() => () => Vector3.Distance(transform.position, GameController.Instance.Player.transform.position) > 1f;
+        }
+
+        #endregion
         // Start is called before the first frame update
         protected override void Start()
         {
@@ -33,7 +72,8 @@ namespace DesignPattern.Factory
 
         protected void Update()
         {
-            Action();
+            stateMachine.Tick();
+
 
             if (pathNodes.Count > 0 && GameController.Instance.Debug)
             {
@@ -47,17 +87,9 @@ namespace DesignPattern.Factory
             scriptableZombie = (ScriptableZombie)scriptableCharacter;
             damage = scriptableZombie.damage;
             timeToAttack = scriptableZombie.timeToAttack;
+            pushBackStrength = scriptableZombie.pushBackStrength;
 
-            playerPosition = transform.position;
-            // setting loop search player
-            InvokeRepeating(nameof(SearchPlayer), 0f, 1f);
-        }
-
-        protected void Action()
-        {
-            if (isTakeDamage) return;
-            if (isAttack) return;
-            AIMove();
+            targetPosition = transform.position;
         }
 
         public override void Move(Vector3 direction)
@@ -67,25 +99,21 @@ namespace DesignPattern.Factory
             sprite.transform.right = direction;
         }
 
-        protected IEnumerator StartAttack()
-        {
-            isAttack = true;
-            yield return new WaitForSeconds(timeToAttack);
-            Attack();
-            isAttack = false;
-        }
-
         public override void Attack()
         {
             Vector2 direction = (attackPoint.position - transform.position).normalized;
-            RaycastHit2D hit = Physics2D.Raycast(attackPoint.position, direction, 0.1f);
-            if (hit)
+            RaycastHit2D[] hits = Physics2D.RaycastAll(attackPoint.position, direction, 0.1f);
+            if (hits.Length > 0)
             {
-                Player player = hit.collider.GetComponent<Player>();
-                if (player != null)
+                foreach (var hit in hits)
                 {
-                    player.TakeDamage(damage, pushBackStrength, direction);
+                    Player player = hit.collider.GetComponent<Player>();
+                    if (player != null)
+                    {
+                        player.TakeDamage(damage, pushBackStrength, direction);
+                    }
                 }
+                
             }
         }
 
@@ -96,63 +124,12 @@ namespace DesignPattern.Factory
             Destroy(gameObject);
         }
 
-        #region PATHFINDING
-        protected void SearchPlayer()
-        {
-            Player player = GameController.Instance.Player;
-            if (playerPosition != player.transform.position)
-            {
-                playerPosition = player.transform.position;
-                pathNodes = Pathfinding.Pathfinding.Findpath(MapController.Instance.Grid, transform.position, playerPosition, DirectionType.FOUR_DIRECTIONS);
-                //Debug.Log("pathNodes: " + pathNodes.Count);
-            }
-        }
-
-        private void AIMove()
-        {
-            if (pathNodes.Count > 0)
-            {
-                PathNode currentNode = pathNodes[0];
-                if (currentNode == null) return;
-                Vector3 targetPosition = MapController.Instance.Grid.GetWorldPosition(currentNode.X, currentNode.Y);
-                if (Vector3.Distance(transform.position, targetPosition) > 0.5f)
-                {
-                    Vector3 direction = (targetPosition - transform.position).normalized;
-                    Move(direction);
-                    
-                } else
-                {
-                    pathNodes.RemoveAt(0);
-                }
-            }
-        }
-        #endregion
-
         private void OnCollisionStay2D(Collision2D collision)
         {
             if (collision.transform.tag.Equals("Player"))
             {
                 Vector2 direction = (collision.transform.position - transform.position).normalized;
                 sprite.transform.right = direction;
-                
-                if (isAttack == false)
-                {
-                    StartCoroutine(StartAttack());
-                }
-            }
-        }
-
-        private void OnTriggerStay2D(Collider2D collision)
-        {
-            if (collision.transform.tag.Equals("Player"))
-            {
-                Vector2 direction = (collision.transform.position - transform.position).normalized;
-                sprite.transform.right = direction;
-
-                if (isAttack == false)
-                {
-                    StartCoroutine(StartAttack());
-                }
             }
         }
 

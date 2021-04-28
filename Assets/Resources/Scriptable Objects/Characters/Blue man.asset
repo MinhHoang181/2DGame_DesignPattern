@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Blue man
   m_EditorClassIdentifier: 
   characterSprite: {fileID: 21300000, guid: 899bd2d94a51848a2b9656b80e95cfc9, type: 3}
+  characterType: 0
   characterName: Blue man
   health: 100
   speed: 2
-  timeStun: 1
-  weapon: {fileID: 11400000, guid: 625db3d52d9d74d4c8a04c73eb5dd55b, type: 2}
+  timeStun: 0.5
+  weapons:
+  - {fileID: 11400000, guid: 625db3d52d9d74d4c8a04c73eb5dd55b, type: 2}
+  - {fileID: 11400000, guid: ef973b1fbbea0429982d199eb39233f1, type: 2}
