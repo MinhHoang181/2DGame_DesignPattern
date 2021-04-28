@@ -1,5 +1,5 @@
 public enum WeaponType
 {
-	Bullet,
+	BareHands,
 	Piston,
 }
