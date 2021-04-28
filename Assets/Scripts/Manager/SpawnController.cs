@@ -38,7 +38,7 @@ namespace DesignPattern
             GameObject player = CharacterFactory.CreateCharacter(GameController.Instance.ScriptablePlayer);
             player.transform.position = new Vector3(4, 4, 0);
 
-            SpawnZombie(6);
+            SpawnZombie(5);
         }
 
         // Update is called once per frame

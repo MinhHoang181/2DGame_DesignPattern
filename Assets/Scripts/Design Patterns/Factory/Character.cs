@@ -24,9 +24,13 @@ namespace DesignPattern.Factory
         #endregion
 
         #region PUBLIC UI
-        public SpriteRenderer Sprite { get { return sprite; } }
         public Transform AttackPoint { get { return attackPoint; } }
         public TextMeshPro HealthText { get { return healthText; } }
+        #endregion
+
+        #region PUBLIC COMPONENTS
+        public SpriteRenderer Sprite { get { return sprite; } }
+        public Rigidbody2D RigBody { get { return rigBody; } }
         #endregion
 
         #region PRIVATE VALUES

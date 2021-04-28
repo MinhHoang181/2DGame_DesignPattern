@@ -198,7 +198,7 @@ namespace Pathfinding
                     TileBase tile = tileArray[x + y * bounds.size.x];
                     if (tile != null)
                     {
-                        //Debug.Log("x: " + x + ", y: " + y + " = " + tile.name);
+                        //Debug.Log("x: " + x + ", y: " + y + " = " + tilemap.name);
                         SetGridObject(x, y, value);
                     }
                 }

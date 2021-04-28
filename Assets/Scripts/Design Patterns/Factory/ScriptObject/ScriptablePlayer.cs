@@ -6,7 +6,7 @@ using UnityEngine;
 public class ScriptablePlayer : ScriptableCharacter
 {
     [Header("Player")]
-    public ScriptableWeapon weapon;
+    public ScriptableWeapon[] weapons;
 
     public ScriptablePlayer() : base(CharacterType.Player) { }
 }
