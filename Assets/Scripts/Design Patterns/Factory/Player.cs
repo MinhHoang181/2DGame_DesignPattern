@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DesignPattern.Strategy;
-using TMPro;
 using System;
 
 namespace DesignPattern.Factory
@@ -16,8 +15,13 @@ namespace DesignPattern.Factory
         
         private Vector3 directionMove;
 
+        #region DELEGATES
+        public event Action OnDie;
+        #endregion
+
         protected override void Start()
         {
+            GameController.Instance.AssignPlayer(this);
             base.Start();
 
             weapon = transform.GetComponent<WeaponController>();
@@ -68,6 +72,7 @@ namespace DesignPattern.Factory
         protected override void Die()
         {
             Debug.Log("Game over");
+            OnDie?.Invoke();
         }
 
         private void FacingToMouse()

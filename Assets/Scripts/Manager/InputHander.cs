@@ -65,7 +65,7 @@ namespace DesignPattern
         // Update is called once per frame
         void Update()
         {
-            if (!GameController.Instance.IsPause)
+            if (GameController.Instance.IsPause == false)
             {
                 if (GameController.Instance.Player != null)
                 {
@@ -75,12 +75,10 @@ namespace DesignPattern
 
             if (Input.GetKeyDown(pause))
             {
-                GameController.Instance.ChangeState();
-            }
-
-            if (GameController.Instance.IsPause)
-            {
-                SettingControl();
+                if (GameController.Instance.IsPlaying)
+                {
+                    GameController.Instance.ChangeState();
+                }
             }
         }
 
@@ -132,11 +130,6 @@ namespace DesignPattern
             {
                 btnChangePrevWeapon.Execute();
             }
-        }
-
-        private void SettingControl()
-        {
-
         }
     }
 }

@@ -23,8 +23,6 @@ namespace DesignPattern
             {
                 Destroy(gameObject);
             }
-
-            DontDestroyOnLoad(gameObject);
         }
         #endregion
 

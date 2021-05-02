@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using DesignPattern.Factory;
+using UnityEngine.SceneManagement;
 
 namespace DesignPattern
 {
@@ -27,8 +28,11 @@ namespace DesignPattern
 
         #region DELEGATES
         public static event Action<Player> PlayerChangedEvent;
-        //public static event Action<bool> GameStateChangedEvent;
+        public static event Action StartGameEvent;
+        public static event Action GameStateChangedEvent;
+        public static event Action GameOverEvent;
         #endregion
+
         public ScriptablePlayer ScriptablePlayer { get { return scriptablePlayer; } }
         [SerializeField] ScriptablePlayer scriptablePlayer;
         public bool Debug { get { return debug; } }
@@ -36,12 +40,18 @@ namespace DesignPattern
         public LayerMask HitLayers { get { return hitLayers; } }
         [SerializeField] LayerMask hitLayers;
 
-        
+        #region SCENES
+        [Header("Scenes")]
+        [SerializeField] string mainScene;
+        [SerializeField] string gameScene;
+        #endregion
 
         public Player Player { get { return player; } }
         private Player player;
         public bool IsPause { get { return isPause; } }
         private bool isPause;
+        public bool IsPlaying { get { return isPlaying; } }
+        private bool isPlaying;
 
         // Start is called before the first frame update
         void Start()
@@ -49,17 +59,15 @@ namespace DesignPattern
 
         }
 
-        // Update is called once per frame
-        void Update()
+        public void AssignPlayer(Player player)
         {
-            if (player == null)
+            if (this.player != null && this.player != player)
             {
-                player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
-                if (player)
-                {
-                    PlayerChangedEvent?.Invoke(player);
-                }
+                Destroy(player.gameObject);
             }
+            this.player = player;
+            player.OnDie += GameOver;
+            PlayerChangedEvent?.Invoke(this.player);
         }
 
         public void ChangeState()
@@ -67,14 +75,42 @@ namespace DesignPattern
             if (isPause)
             {
                 isPause = false;
+                Time.timeScale = 1;
             } else
             {
                 isPause = true;
+                Time.timeScale = 0;
             }
-            //gameStateChangedEvent(isPause);
+            GameStateChangedEvent?.Invoke();
         }
 
-        
+        #region SCENES MANAGER
+        public void LoadGameScene()
+        {
+            isPause = false;
+            Time.timeScale = 1;
+            SceneManager.LoadScene(gameScene);
+            isPlaying = true;
+            StartGameEvent?.Invoke();
+        }
+
+        public void LoadMainScene()
+        {
+            isPause = false;
+            Time.timeScale = 1;
+            SceneManager.LoadScene(mainScene);
+            isPlaying = false;
+            StartGameEvent?.Invoke();
+        }
+        #endregion
+
+        private void GameOver()
+        {
+            isPause = true;
+            Time.timeScale = 0;
+            isPlaying = false;
+            GameOverEvent?.Invoke();
+        }
     }
 }
 

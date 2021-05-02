@@ -27,15 +27,28 @@ namespace DesignPattern
         }
         #endregion
 
+        [SerializeField] GameObject pauseMenu;
+        [SerializeField] GameObject dieMenu;
+
         private void OnEnable()
         {
             WeaponController.OnWeaponChange += UpdateWeaponUI;
             Character.OnHealthChange += UpdateHealthUI;
+
+            // Menu
+            GameController.StartGameEvent += TurnOffAllUI;
+            GameController.GameStateChangedEvent += TogglePauseMenu;
+            GameController.GameOverEvent += ToggleGameOverMenu;
         }
         private void OnDisable()
         {
             WeaponController.OnWeaponChange -= UpdateWeaponUI;
             Character.OnHealthChange -= UpdateHealthUI;
+
+            // Menu
+            GameController.StartGameEvent -= TurnOffAllUI;
+            GameController.GameStateChangedEvent -= TogglePauseMenu;
+            GameController.GameOverEvent -= ToggleGameOverMenu;
         }
 
         private void UpdateWeaponUI(Character character, ScriptableWeapon weapon)
@@ -46,6 +59,24 @@ namespace DesignPattern
         private void UpdateHealthUI(Character character)
         {
             character.HealthText.text = character.CurrentHealth + "/" + character.Health;
+        }
+
+        private void TurnOffAllUI()
+        {
+            pauseMenu.SetActive(false);
+            dieMenu.SetActive(false);
+        }
+
+        private void TogglePauseMenu()
+        {
+            TurnOffAllUI();
+            pauseMenu.SetActive(GameController.Instance.IsPause);
+        }
+
+        private void ToggleGameOverMenu()
+        {
+            TurnOffAllUI();
+            dieMenu.SetActive(true);
         }
     }
 }
