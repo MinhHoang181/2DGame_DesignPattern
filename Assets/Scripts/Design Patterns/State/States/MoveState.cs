@@ -9,6 +9,7 @@ namespace DesignPattern.State
     public class MoveState : IState
     {
         public float TimeStuck { get; private set; }
+        public float TimeMove { get; private set; }
 
         private Zombie zombie;
         private Vector3 lastPosition;
@@ -21,6 +22,7 @@ namespace DesignPattern.State
         public void OnEnter()
         {
             TimeStuck = 0f;
+            TimeMove = 0f;
         }
 
         public void OnExit()
@@ -31,6 +33,7 @@ namespace DesignPattern.State
         public void Tick()
         {
             AIMove();
+            TimeMove += Time.deltaTime;
 
             if (Vector3.Distance(zombie.transform.position, lastPosition) <= 0f)
             {

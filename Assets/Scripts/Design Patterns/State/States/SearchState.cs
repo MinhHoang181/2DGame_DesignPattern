@@ -10,8 +10,6 @@ namespace DesignPattern.State
     {
         private Zombie zombie;
 
-        private Vector3 targetPosition;
-
         public SearchState(Zombie zombie)
         {
             this.zombie = zombie;
@@ -19,7 +17,6 @@ namespace DesignPattern.State
 
         public void OnEnter()
         {
-            targetPosition = zombie.TargetPosition;
         }
 
         public void OnExit()
@@ -38,12 +35,8 @@ namespace DesignPattern.State
 
             if (player == null) return;
 
-            if (targetPosition != player.transform.position)
-            {
-                targetPosition = player.transform.position;
-                zombie.PathNodes = Pathfinding.Pathfinding.Findpath(MapController.Instance.Grid, zombie.transform.position, targetPosition, DirectionType.FOUR_DIRECTIONS);
-                //Debug.Log("pathNodes: " + pathNodes.Count);
-            }
+            zombie.PathNodes = Pathfinding.Pathfinding.Findpath(MapController.Instance.Grid, zombie.transform.position, player.transform.position, DirectionType.FOUR_DIRECTIONS);
+            //Debug.Log("pathNodes: " + pathNodes.Count);
         }
         #endregion
     }

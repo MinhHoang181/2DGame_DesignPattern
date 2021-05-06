@@ -11,9 +11,7 @@ namespace DesignPattern.Factory
     public class Zombie : Character
     {
         public List<PathNode> PathNodes { get { return pathNodes; } set { pathNodes = value; } }
-        public Vector3 TargetPosition { get { return targetPosition; } set { targetPosition = value; } }
         public float TimeToAttack { get { return timeToAttack; } }
-
         public bool IsAttack { get { return isAttack; } set { isAttack = value; } }
 
         protected ScriptableZombie scriptableZombie;
@@ -23,8 +21,6 @@ namespace DesignPattern.Factory
 
         // Boolean
         protected bool isAttack = false;
-        
-        protected Vector3 targetPosition;
         protected Coroutine attackCoroutine;
 
         #region PATHFINDING VALUES
@@ -47,6 +43,7 @@ namespace DesignPattern.Factory
             // MOVE -> SEARCH
             stateMachine.AddTransition(move, search, HasNoTarget());
             stateMachine.AddTransition(move, search, StuckForASecond());
+            stateMachine.AddTransition(move, search, MoveForASecond());
             // MOVE -> ATTACK
             stateMachine.AddTransition(move, attack, ReachRangeToAttack());
             // ATTACK -> SEARCH
@@ -55,13 +52,23 @@ namespace DesignPattern.Factory
             stateMachine.SetState(search);
 
             Func<bool> HasTarget() => () => pathNodes.Count > 0;
-            Func<bool> HasNoTarget() => () => pathNodes.Count == 0; //|| targetPosition != GameController.Instance.Player.transform.position;
-            Func<bool> StuckForASecond() => () => move.TimeStuck > 1f;
+            Func<bool> HasNoTarget() => () => pathNodes.Count == 0;
+            Func<bool> StuckForASecond() => () => move.TimeStuck > 0.5f;
+            Func<bool> MoveForASecond() => () => move.TimeMove > 2f;
             Func<bool> ReachRangeToAttack() => () => Vector3.Distance(transform.position, GameController.Instance.Player.transform.position) < 1f;
             Func<bool> OutRangeToAttack() => () => Vector3.Distance(transform.position, GameController.Instance.Player.transform.position) > 1f;
         }
 
         #endregion
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            // renew pathnode
+            pathNodes.RemoveRange(0, pathNodes.Count);
+        }
+
         // Start is called before the first frame update
         protected override void Start()
         {
@@ -89,7 +96,6 @@ namespace DesignPattern.Factory
             timeToAttack = scriptableZombie.timeToAttack;
             pushBackStrength = scriptableZombie.pushBackStrength;
 
-            targetPosition = transform.position;
         }
 
         public override void Move(Vector3 direction)
@@ -119,9 +125,10 @@ namespace DesignPattern.Factory
 
         protected override void Die()
         {
-            CancelInvoke();
+            base.Die();
 
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            gameObject.Kill();
         }
 
         private void OnCollisionStay2D(Collision2D collision)

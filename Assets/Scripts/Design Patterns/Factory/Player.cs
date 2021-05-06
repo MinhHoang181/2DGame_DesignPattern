@@ -15,10 +15,6 @@ namespace DesignPattern.Factory
         
         private Vector3 directionMove;
 
-        #region DELEGATES
-        public event Action OnDie;
-        #endregion
-
         protected override void Start()
         {
             GameController.Instance.AssignPlayer(this);
@@ -67,12 +63,6 @@ namespace DesignPattern.Factory
 
             Vector2 direction = (attackPoint.position - transform.position).normalized;
             weapon.Fire(direction);
-        }
-
-        protected override void Die()
-        {
-            Debug.Log("Game over");
-            OnDie?.Invoke();
         }
 
         private void FacingToMouse()

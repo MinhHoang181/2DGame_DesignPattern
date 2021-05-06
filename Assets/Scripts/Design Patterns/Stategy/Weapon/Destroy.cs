@@ -8,7 +8,7 @@ namespace DesignPattern.Strategy
     {
         [SerializeField] float timeLive = Mathf.Infinity;
 
-        void Awake()
+        private void OnEnable()
         {
             StartCoroutine(TimeDestroy());
         }
@@ -16,7 +16,7 @@ namespace DesignPattern.Strategy
         private IEnumerator TimeDestroy()
         {
             yield return new WaitForSeconds(timeLive);
-            Destroy(gameObject);
+            gameObject.Kill();
         }
     }
 }

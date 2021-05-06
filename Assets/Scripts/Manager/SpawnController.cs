@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DesignPattern.Factory;
+using System;
+using Random = UnityEngine.Random;
 
 namespace DesignPattern
 {
@@ -23,7 +25,12 @@ namespace DesignPattern
             }
         }
         #endregion
+        [Header("Number Zombie")]
+        [SerializeField] int numberZombie;
+        private int currentNumberZombie;
+
         [Header("Spawn Point")]
+        [SerializeField] Transform playerSpawnPoint;
         [SerializeField] Transform[] spawnPoints;
 
         [Header("Prefab")]
@@ -36,15 +43,14 @@ namespace DesignPattern
         void Start()
         {
             GameObject player = CharacterFactory.CreateCharacter(GameController.Instance.ScriptablePlayer);
-            player.transform.position = new Vector3(4, 4, 0);
+            player.transform.position = playerSpawnPoint.position;
 
-            SpawnZombie(5);
+            SpawnZombie(numberZombie);
         }
 
         // Update is called once per frame
         void Update()
         {
-            
         }
 
         private void SpawnZombie(int number)
@@ -56,6 +62,21 @@ namespace DesignPattern
                 Vector3 randPosition = spawnPoints[randIndex].position + randOffset;
                 GameObject zombie = CharacterFactory.CreateCharacter(scriptableZombie);
                 zombie.transform.position = randPosition;
+
+                currentNumberZombie++;
+                zombie.GetComponent<Zombie>().OnDie += ZombieDie;
+            }
+        }
+
+        private void ZombieDie(Character zombie)
+        {
+            currentNumberZombie -= 1;
+            zombie.OnDie -= ZombieDie;
+
+            if (currentNumberZombie <= 0)
+            {
+                numberZombie += 5;
+                SpawnZombie(numberZombie);
             }
         }
     }

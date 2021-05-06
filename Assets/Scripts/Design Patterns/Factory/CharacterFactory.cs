@@ -22,7 +22,8 @@ namespace DesignPattern.Factory
 
         public static GameObject CreateCharacter(ScriptableCharacter scriptableCharacter)
         {
-            GameObject character = Instantiate(Prefab);
+            //GameObject character = Instantiate(Prefab);
+            GameObject character = Prefab.Spawn();
             character.name = scriptableCharacter.name;
             RemoveAllComponent(character);
 
@@ -35,7 +36,8 @@ namespace DesignPattern.Factory
                     SettingZombieCharacter(character, scriptableCharacter);
                     return character;
                 default:
-                    Destroy(character);
+                    //Destroy(character);
+                    character.Kill();
                     return null;
             }
         }
@@ -47,10 +49,15 @@ namespace DesignPattern.Factory
             {
                 Destroy(character);
             }
-            Component weapon = gameObject.GetComponent<WeaponController>();
-            if (weapon != null)
+            Component weaponController = gameObject.GetComponent<WeaponController>();
+            if (weaponController != null)
             {
-                Destroy(weapon);
+                Destroy(weaponController);
+            }
+            Component iweapon = gameObject.GetComponent<IWeapon>() as Component;
+            if (iweapon != null)
+            {
+                Destroy(iweapon);
             }
         }
 

@@ -35,7 +35,8 @@ namespace DesignPattern.Strategy
 
         private void StartShoot(Vector2 direction)
         {
-            LineRenderer line = Instantiate(piston.bullet).GetComponent<LineRenderer>();
+            //LineRenderer line = Instantiate(piston.bullet).GetComponent<LineRenderer>();
+            LineRenderer line = piston.bullet.Spawn().GetComponent<LineRenderer>();
 
             Vector3 endLine = shootPoint.position + new Vector3(direction.x, direction.y, 0) * piston.distance;
 

@@ -63,7 +63,7 @@ namespace DesignPattern
         {
             if (this.player != null && this.player != player)
             {
-                Destroy(player.gameObject);
+                player.gameObject.Kill();
             }
             this.player = player;
             player.OnDie += GameOver;
@@ -104,7 +104,7 @@ namespace DesignPattern
         }
         #endregion
 
-        private void GameOver()
+        private void GameOver(Character player)
         {
             isPause = true;
             Time.timeScale = 0;

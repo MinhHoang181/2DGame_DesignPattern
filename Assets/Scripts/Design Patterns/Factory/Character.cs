@@ -10,6 +10,7 @@ namespace DesignPattern.Factory
     {
         #region DELEGATES
         public static event Action<Character> OnHealthChange;
+        public event Action<Character> OnDie;
         #endregion
 
         #region PUBLIC VALUES
@@ -58,7 +59,6 @@ namespace DesignPattern.Factory
         #region ABSTRACT FUNCTION
         public abstract void Move(Vector3 direction);
         public abstract void Attack();
-        protected abstract void Die();
         #endregion
 
         protected virtual void OnEnable()
@@ -66,6 +66,11 @@ namespace DesignPattern.Factory
             if (isFirsSpawn) return;
 
             Setting();
+        }
+
+        protected virtual void OnDisable()
+        {
+            StopAllCoroutines();
         }
 
         protected virtual void Start()
@@ -101,6 +106,7 @@ namespace DesignPattern.Factory
             if (currentHealth.Equals(0))
             {
                 Die();
+                return;
             }
 
             PushBack(pushBackStrength, direction);
@@ -123,6 +129,11 @@ namespace DesignPattern.Factory
             rigBody.velocity = Vector2.zero;
             Vector2 force = direction * pushBackStrength * 50;
             rigBody.AddForce(force);
+        }
+
+        protected virtual void Die()
+        {
+            OnDie?.Invoke(this);
         }
     }
 }
