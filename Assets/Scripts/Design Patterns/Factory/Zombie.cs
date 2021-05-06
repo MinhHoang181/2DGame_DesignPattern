@@ -107,8 +107,11 @@ namespace DesignPattern.Factory
 
         public override void Attack()
         {
+            Vector2 directionToPlayer = (GameController.Instance.Player.transform.position - transform.position).normalized;
+            sprite.transform.right = directionToPlayer;
+
             Vector2 direction = (attackPoint.position - transform.position).normalized;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(attackPoint.position, direction, 0.1f);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(attackPoint.position, direction, 1f);
             if (hits.Length > 0)
             {
                 foreach (var hit in hits)
@@ -129,15 +132,6 @@ namespace DesignPattern.Factory
 
             //Destroy(gameObject);
             gameObject.Kill();
-        }
-
-        private void OnCollisionStay2D(Collision2D collision)
-        {
-            if (collision.transform.tag.Equals("Player"))
-            {
-                Vector2 direction = (collision.transform.position - transform.position).normalized;
-                sprite.transform.right = direction;
-            }
         }
 
         #region DEBUG
